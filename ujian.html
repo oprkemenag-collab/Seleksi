@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ujian Seleksi ASN Teladan</title>
+    <title>Seleksi ASN Teladan</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
@@ -11,7 +11,7 @@
     <!-- Header / Navbar Ujian -->
     <div class="w-full max-w-4xl bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-4 flex justify-between items-center sticky top-4 z-10 border border-slate-100">
         <div>
-            <h1 class="font-bold text-base md:text-lg text-slate-800">Ujian Kompetensi ASN Teladan</h1>
+            <h1 class="font-bold text-base md:text-lg text-slate-800">Seleksi ASN Teladan</h1>
             <p class="text-xs md:text-sm text-slate-500" id="namaPeserta">Memuat peserta...</p>
         </div>
         <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-xl font-mono font-bold text-lg md:text-xl" id="timer">
@@ -58,7 +58,7 @@
                 if(json.status === "success") {
                     soalData = json.data;
                     if(soalData.length === 0) {
-                        document.getElementById("soal-container").innerHTML = `<p class="text-center text-red-500 py-12">Belum ada soal ujian yang dimasukkan oleh admin.</p>`;
+                        document.getElementById("soal-container").innerHTML = `<p class="text-center text-red-500 py-12">Belum ada soal seleksi yang dimasukkan oleh admin.</p>`;
                         return;
                     }
                     tampilkanSoal();
@@ -73,129 +73,4 @@
             if(soalData.length === 0) return;
             let soal = soalData[currentIndex];
             
-            document.getElementById("nomorIndikator").innerText = `Soal ${currentIndex + 1} dari ${soalData.length}`;
-
-            let html = `
-                <div class="mb-3 text-xs font-semibold text-blue-600 uppercase tracking-wider">Pertanyaan Nomor ${currentIndex + 1}</div>
-                <h2 class="text-base md:text-lg font-medium text-slate-800 mb-6 leading-relaxed">${soal.pertanyaan}</h2>
-                <div class="space-y-3">
-                    ${['A', 'B', 'C', 'D'].map(opt => `
-                        <label class="flex items-center p-3.5 border rounded-xl cursor-pointer hover:bg-slate-50 transition ${jawabanSiswa[soal.id] === opt ? 'border-blue-600 bg-blue-50/40 ring-1 ring-blue-600' : 'border-slate-200'}">
-                            <input type="radio" name="pilihan" value="${opt}" ${jawabanSiswa[soal.id] === opt ? 'checked' : ''} onchange="pilihJawaban('${soal.id}', '${opt}')" class="w-4 h-4 text-blue-600 accent-blue-600">
-                            <span class="ml-3 font-bold text-slate-700 w-6">${opt}.</span>
-                            <span class="text-slate-700 text-sm md:text-base">${soal[opt.toLowerCase()]}</span>
-                        </label>
-                    `).join('')}
-                </div>
-            `;
-            document.getElementById("soal-container").innerHTML = html;
-
-            document.getElementById("btnPrev").classList.toggle("hidden", currentIndex === 0);
-            if (currentIndex === soalData.length - 1) {
-                document.getElementById("btnNext").classList.add("hidden");
-                document.getElementById("btnSubmit").classList.remove("hidden");
-            } else {
-                document.getElementById("btnNext").classList.remove("hidden");
-                document.getElementById("btnSubmit").classList.add("hidden");
-            }
-        }
-
-        function pilihJawaban(idSoal, pilihan) {
-            jawabanSiswa[idSoal] = pilihan;
-            tampilkanSoal();
-        }
-
-        function ubahSoal(arah) {
-            currentIndex += arah;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex >= soalData.length) currentIndex = soalData.length - 1;
-            tampilkanSoal();
-        }
-
-        function mulaiTimer() {
-            const timerInterval = setInterval(() => {
-                let m = Math.floor(timeLeft / 60);
-                let s = timeLeft % 60;
-                document.getElementById("timer").innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Waktu ujian habis! Sistem akan mengirimkan jawaban Anda secara otomatis.");
-                    submitUjian();
-                }
-                timeLeft--;
-            }, 1000);
-        }
-
-        function konfirmasiSubmit() {
-            let terjawab = Object.keys(jawabanSiswa).length;
-            let belumTerjawab = soalData.length - terjawab;
-            
-            let konfirmPesan = `Anda telah menjawab ${terjawab} dari ${soalData.length} soal.`;
-            if (belumTerjawab > 0) {
-                konfirmPesan += ` Masih ada ${belumTerjawab} soal yang belum dijawab.`;
-            }
-            konfirmPesan += "\n\nYakin ingin menyelesaikan ujian dan mengirim jawaban?";
-
-            if(confirm(konfirmPesan)) {
-                submitUjian();
-            }
-        }
-
-        async function submitUjian() {
-            let payload = {
-                action: "submitUjian",
-                nip: nipAktif,
-                nama: namaAktif,
-                jawaban: jawabanSiswa
-            };
-
-            document.body.innerHTML = `
-                <div class="flex flex-col h-screen items-center justify-center p-4 bg-slate-50">
-                    <div class="bg-white p-8 rounded-2xl shadow-sm max-w-md w-full text-center border border-slate-100">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">Mengirim Jawaban...</h2>
-                        <p class="text-slate-500 text-sm">Mohon jangan menutup halaman ini hingga proses selesai.</p>
-                    </div>
-                </div>
-            `;
-
-            try {
-                let res = await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify(payload)
-                });
-                let json = await res.json();
-                
-                sessionStorage.clear();
-
-                if(json.status === "success") {
-                    document.body.innerHTML = `
-                        <div class="flex flex-col h-screen items-center justify-center p-4 bg-slate-50">
-                            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center border border-slate-100">
-                                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl">✓</div>
-                                <h2 class="text-2xl font-bold text-slate-800 mb-2">Ujian Selesai!</h2>
-                                <p class="text-slate-500 mb-6 text-sm">Jawaban Anda telah berhasil direkam oleh sistem.</p>
-                                <div class="bg-slate-50 p-4 rounded-xl mb-6 border border-slate-100">
-                                    <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-1">Skor Akhir Anda</p>
-                                    <p class="text-4xl font-extrabold text-blue-600">${json.skor}</p>
-                                    <div class="flex justify-center gap-4 mt-3 text-xs text-slate-600">
-                                        <span>Benar: <b class="text-emerald-600">${json.benar}</b></span>
-                                        <span>Salah: <b class="text-red-600">${json.salah}</b></span>
-                                    </div>
-                                </div>
-                                <a href="index.html" class="block w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-3 rounded-xl transition text-sm">Kembali ke Beranda</a>
-                            </div>
-                        </div>
-                    `;
-                }
-            } catch (err) {
-                alert("Terjadi kesalahan jaringan saat mengirim jawaban.");
-                window.location.reload();
-            }
-        }
-
-        loadSoal();
-    </script>
-</body>
-</html>
+            document.getElementById("nomorIndikator").innerText =
