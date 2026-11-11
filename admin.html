@@ -9,7 +9,6 @@
 <body class="bg-slate-100 min-h-screen p-4 md:p-8">
 
     <div class="max-w-5xl mx-auto">
-        <!-- Header -->
         <header class="bg-white p-6 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <h1 class="text-xl font-bold text-slate-800">Panel Admin: Kelola Bank Soal</h1>
@@ -25,7 +24,6 @@
             </div>
         </header>
 
-        <!-- Form Tambah Soal -->
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm mb-8">
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Tambah Soal Baru</h2>
             <form id="formSoal" onsubmit="tambahSoal(event)" class="space-y-4">
@@ -70,7 +68,6 @@
             </form>
         </div>
 
-        <!-- Daftar Soal -->
         <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm">
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Daftar Soal di Database</h2>
             <div class="overflow-x-auto">
@@ -96,7 +93,6 @@
 
         async function loadDaftarSoal() {
             try {
-                // Memanggil action getSoalAdmin agar kunci jawaban ditampilkan di panel admin
                 let res = await fetch(`${API_URL}?action=getSoalAdmin`);
                 let json = await res.json();
                 if(json.status === "success") {
