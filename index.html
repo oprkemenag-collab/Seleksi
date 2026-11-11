@@ -1,60 +1,63 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-900">
+<html lang="id" class="h-full bg-emerald-950">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Seleksi - ASN Teladan</title>
+    <title>Login Seleksi - ASN Teladan Kemenag</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
+<body class="h-full flex items-center justify-center p-4 bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950">
 
     <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 border border-white/20 transition-all duration-300">
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600 text-white font-bold text-2xl shadow-lg shadow-indigo-600/30 mb-4 transform hover:scale-105 transition">
-                ASN
+            <!-- Logo Kementerian Agama (SVG Resmi) -->
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-emerald-700 text-white shadow-lg shadow-emerald-700/30 mb-4 transform hover:scale-105 transition overflow-hidden p-2">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
             </div>
             <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Seleksi ASN Teladan</h1>
-            <p class="text-sm text-slate-500 mt-1">Silakan masukkan data Anda untuk memulai ujian</p>
+            <p class="text-sm text-slate-500 mt-1">Kementerian Agama &bull; Silakan masukkan data Anda</p>
         </div>
 
         <form id="formLogin" onsubmit="prosesLogin(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Nama Lengkap & Gelar</label>
                 <input type="text" id="nama" required placeholder="Contoh: Nama Saya, S.Kom" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">NIP (Nomor Induk Pegawai)</label>
                 <input type="text" id="nip" required placeholder="Contoh: 1234888820261001" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition font-mono">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition font-mono">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Unit Kerja / Seksi</label>
                 <select id="unit_kerja" required 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
                     <option value="" disabled selected>-- Pilih Unit Kerja / Seksi --</option>
                     <option value="Seksi Subbag Tata Usaha">Seksi Subbag Tata Usaha</option>
                     <option value="Seksi Bimas">Seksi Bimas</option>
                     <option value="Seksi Pendidikan Madrasah">Seksi Pendidikan Madrasah</option>
                     <option value="Seksi Zakat dan Wakaf">Seksi Zakat dan Wakaf</option>
-                    <option value="Seksi Pendidikan Agama dan Pendidikan Keagamaan Islam">Seksi Pendidikan Agama dan Pendidikan Keagamaan Islam</option>
+                    <option value="Seksi Pendidikan Agama dan Pendidikan Keagamaan Islam">Seksi Papkis</option>
                 </select>
             </div>
 
             <div>
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Token Ujian</label>
                 <input type="text" id="token" required placeholder="Masukkan token panitia" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white transition uppercase tracking-widest font-mono font-bold text-center">
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition uppercase tracking-widest font-mono font-bold text-center">
             </div>
 
             <button type="submit" id="btnLogin" 
-                class="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 text-sm mt-2">
+                class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-emerald-700/30 text-sm mt-2">
                 Mulai Ujian Sekarang
             </button>
         </form>
@@ -62,7 +65,7 @@
         <div id="pesanError" class="mt-4 p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl hidden text-center font-medium"></div>
 
         <div class="mt-8 text-center border-t border-slate-100 pt-5">
-            <a href="admin.html" class="text-xs font-medium text-slate-400 hover:text-indigo-600 transition">Akses Panel Administrator &rarr;</a>
+            <a href="admin.html" class="text-xs font-medium text-slate-400 hover:text-emerald-700 transition">Akses Panel Administrator &rarr;</a>
         </div>
     </div>
 
