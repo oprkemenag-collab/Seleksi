@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-100">
+<html lang="id" class="h-full bg-slate-900">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +12,26 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-800">
 
+    <!-- OVERLAY WAJIB FULLSCREEN ALA CAT -->
+    <div id="fullscreenOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full p-8 text-center border border-white/20">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-md">
+                🖥️
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Konfirmasi Memasuki Ruang Ujian</h2>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                Sistem ujian berbasis CAT memerlukan mode <b>Layar Penuh (Fullscreen)</b>. Silakan klik tombol di bawah untuk memulai ujian secara resmi.
+            </p>
+            <button onclick="mulaiUjianFull()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-4 rounded-xl transition text-base shadow-lg shadow-emerald-700/30">
+                Masuk Ruang Ujian & Full Screen
+            </button>
+        </div>
+    </div>
+
     <!-- Top Navigation Header -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
         <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
-                <!-- Logo Kemenag -->
                 <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md shadow-emerald-700/20 text-sm overflow-hidden p-1 border border-emerald-100">
                     <img src="logo-kemenag.png" alt="Logo Kemenag" class="w-full h-full object-contain">
                 </div>
@@ -108,12 +123,12 @@
             document.getElementById("namaPeserta").innerText = `${namaAktif} (NIP: ${nipAktif})`;
         }
 
-        // Fungsi Otomatis Masuk Mode Fullscreen ala CAT
-        function requestFullScreen() {
+        // Fungsi Tombol Mulai Ujian & Masuk Full Screen secara Sah
+        function mulaiUjianFull() {
             let elem = document.documentElement;
             if (elem.requestFullscreen) {
                 elem.requestFullscreen().catch(err => {
-                    console.log("Fullscreen diblokir interaksi browser:", err);
+                    console.log("Fullscreen error:", err);
                 });
             } else if (elem.mozRequestFullScreen) {
                 elem.mozRequestFullScreen();
@@ -122,6 +137,10 @@
             } else if (elem.msRequestFullscreen) {
                 elem.msRequestFullscreen();
             }
+
+            // Sembunyikan overlay dan mulai muat soal
+            document.getElementById("fullscreenOverlay").classList.add("hidden");
+            loadSoal();
         }
 
         async function loadSoal() {
@@ -137,9 +156,6 @@
                     tampilkanSoal();
                     buatGridNavigasi();
                     mulaiTimer();
-                    
-                    // Picu Full Screen otomatis saat soal siap
-                    requestFullScreen();
                 }
             } catch (err) {
                 alert("Gagal memuat soal dari server. Periksa koneksi internet Anda.");
@@ -329,8 +345,6 @@
                 window.location.reload();
             }
         }
-
-        loadSoal();
     </script>
 
     <!-- CUSTOM MODAL KONFIRMASI -->
