@@ -6,25 +6,53 @@
     <title>Admin Panel - Seleksi ASN Teladan</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-100 min-h-screen p-4 md:p-8">
+<body class="bg-slate-100 min-h-screen p-4 md:p-8 flex items-center justify-center">
 
-    <div class="max-w-5xl mx-auto">
-        <header class="bg-white p-6 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <!-- MODAL LOGIN ADMIN -->
+    <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-slate-100">
+            <div class="text-center mb-6">
+                <div class="bg-blue-50 text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 font-bold text-xl">
+                    🔒
+                </div>
+                <h1 class="text-xl font-bold text-slate-800">Autentikasi Admin</h1>
+                <p class="text-sm text-slate-500 mt-1">Masukkan password untuk mengakses panel soal</p>
+            </div>
+            <form onsubmit="verifikasiPassword(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="adminPassword" required placeholder="Password Admin" 
+                        class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition text-center tracking-widest font-mono">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-md shadow-blue-600/20">
+                    Masuk Panel
+                </button>
+            </form>
+            <div id="errorPassword" class="mt-3 text-red-500 text-xs text-center hidden">Password salah!</div>
+            <div class="mt-6 text-center border-t border-slate-100 pt-4">
+                <a href="index.html" class="text-xs text-slate-400 hover:text-slate-600 transition">&larr; Kembali ke Halaman Utama</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA ADMIN (Disembunyikan sebelum login berhasil) -->
+    <div id="adminContent" class="max-w-5xl mx-auto w-full hidden">
+        <header class="bg-white p-6 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-slate-100">
             <div>
                 <h1 class="text-xl font-bold text-slate-800">Panel Admin: Kelola Bank Soal</h1>
-                <p class="text-sm text-slate-500">Manajemen soal pilihan ganda (Target: 100 Soal)</p>
+                <p class="text-sm text-slate-500">Manajemen soal pilihan ganda Seleksi ASN Teladan</p>
             </div>
             <div class="flex items-center gap-3">
                 <div id="counterSoal" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl font-bold text-sm border border-blue-100">
                     Total Soal: 0
                 </div>
-                <a href="index.html" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl font-medium text-sm transition">
-                    &larr; Keluar
-                </a>
+                <button onclick="logoutAdmin()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl font-medium text-sm transition">
+                    Keluar Admin
+                </button>
             </div>
         </header>
 
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm mb-8">
+        <!-- Form Tambah Soal -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm mb-8 border border-slate-100">
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Tambah Soal Baru</h2>
             <form id="formSoal" onsubmit="tambahSoal(event)" class="space-y-4">
                 <div>
@@ -68,7 +96,8 @@
             </form>
         </div>
 
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+        <!-- Daftar Soal -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Daftar Soal di Database</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -90,6 +119,40 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyZWzYcVquAJrUV8CKd-_Ly9uGvzR-7bX5gkjCinpzvgvUHDgkdxS2_86SxoJ-3lGxT1A/exec";
+        
+        // ATUR PASSWORD ADMIN ANDA DI SINI
+        const PASSWORD_ADMIN = "admin123"; 
+
+        // Cek apakah sudah login sebelumnya di session browser
+        if (sessionStorage.getItem("admin_logged_in") === "true") {
+            bukaPanelAdmin();
+        }
+
+        function verifikasiPassword(e) {
+            e.preventDefault();
+            let inputPass = document.getElementById("adminPassword").value;
+            let errBox = document.getElementById("errorPassword");
+
+            if (inputPass === PASSWORD_ADMIN) {
+                sessionStorage.setItem("admin_logged_in", "true");
+                bukaPanelAdmin();
+            } else {
+                errBox.classList.remove("hidden");
+                document.getElementById("adminPassword").value = "";
+            }
+        }
+
+        function bukaPanelAdmin() {
+            document.getElementById("authModal").classList.add("hidden");
+            document.getElementById("adminContent").classList.remove("hidden");
+            document.body.classList.remove("flex", "items-center", "justify-center");
+            loadDaftarSoal();
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem("admin_logged_in");
+            window.location.reload();
+        }
 
         async function loadDaftarSoal() {
             try {
@@ -170,8 +233,6 @@
                 }
             }
         }
-
-        loadDaftarSoal();
     </script>
 </body>
 </html>
