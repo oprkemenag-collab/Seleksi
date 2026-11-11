@@ -120,27 +120,41 @@
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyZWzYcVquAJrUV8CKd-_Ly9uGvzR-7bX5gkjCinpzvgvUHDgkdxS2_86SxoJ-3lGxT1A/exec";
         
-        // ATUR PASSWORD ADMIN ANDA DI SINI
-        const PASSWORD_ADMIN = "admin123"; 
+        
+        async function verifikasiPassword(e) {
+    e.preventDefault();
+    let inputPass = document.getElementById("adminPassword").value;
+    let errBox = document.getElementById("errorPassword");
+    let btnSubmit = e.target.querySelector("button");
 
-        // Cek apakah sudah login sebelumnya di session browser
-        if (sessionStorage.getItem("admin_logged_in") === "true") {
+    btnSubmit.innerText = "Memeriksa...";
+    btnSubmit.disabled = true;
+    errBox.classList.add("hidden");
+
+    try {
+        let res = await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "loginAdmin", password: inputPass })
+        });
+        let json = await res.json();
+
+        if (json.status === "success") {
+            sessionStorage.setItem("admin_logged_in", "true");
             bukaPanelAdmin();
+        } else {
+            errBox.innerText = json.message;
+            errBox.classList.remove("hidden");
+            document.getElementById("adminPassword").value = "";
+            btnSubmit.innerText = "Masuk Panel";
+            btnSubmit.disabled = false;
         }
-
-        function verifikasiPassword(e) {
-            e.preventDefault();
-            let inputPass = document.getElementById("adminPassword").value;
-            let errBox = document.getElementById("errorPassword");
-
-            if (inputPass === PASSWORD_ADMIN) {
-                sessionStorage.setItem("admin_logged_in", "true");
-                bukaPanelAdmin();
-            } else {
-                errBox.classList.remove("hidden");
-                document.getElementById("adminPassword").value = "";
-            }
-        }
+    } catch (err) {
+        errBox.innerText = "Gagal terhubung ke server.";
+        errBox.classList.remove("hidden");
+        btnSubmit.innerText = "Masuk Panel";
+        btnSubmit.disabled = false;
+    }
+}
 
         function bukaPanelAdmin() {
             document.getElementById("authModal").classList.add("hidden");
