@@ -38,14 +38,12 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbx2ztmnvHd0VS3YFgyeGJ7GJUzRzUOiR8BgUVtXq1x-LHR5uDSumRwlwe-EcdjKYzybiQ/exec";
         let currentIndex = 0;
         let soalData = [];
-        let jawabanSiswa = {}; // Menyimpan jawaban (format: { id_soal: pilihan })
-        let timeLeft = 90 * 60; // 90 menit dalam detik (5400 detik)
+        let jawabanSiswa = {}; 
+        let timeLeft = 90 * 60; // 90 menit dalam detik
 
-        // Ambil NIP dan Nama dari SessionStorage
         const nipAktif = sessionStorage.getItem("nip_asn");
         const namaAktif = sessionStorage.getItem("nama_asn");
 
-        // Validasi sesi: jika belum login, kembalikan ke index.html
         if (!nipAktif) {
             alert("Sesi anda habis atau belum login. Silakan login terlebih dahulu.");
             window.location.href = "index.html";
@@ -53,7 +51,6 @@
             document.getElementById("namaPeserta").innerText = `Peserta: ${namaAktif} (${nipAktif})`;
         }
 
-        // Ambil Soal dari GAS (Menggunakan action getSoal yang aman tanpa kunci jawaban)
         async function loadSoal() {
             try {
                 let res = await fetch(`${API_URL}?action=getSoal`);
@@ -68,7 +65,7 @@
                     mulaiTimer();
                 }
             } catch (err) {
-                alert("Gagal memuat soal. Periksa koneksi atau URL API Anda.");
+                alert("Gagal memuat soal. Periksa koneksi Anda.");
             }
         }
 
@@ -93,7 +90,6 @@
             `;
             document.getElementById("soal-container").innerHTML = html;
 
-            // Kontrol visibilitas tombol navigasi
             document.getElementById("btnPrev").classList.toggle("hidden", currentIndex === 0);
             if (currentIndex === soalData.length - 1) {
                 document.getElementById("btnNext").classList.add("hidden");
@@ -106,7 +102,7 @@
 
         function pilihJawaban(idSoal, pilihan) {
             jawabanSiswa[idSoal] = pilihan;
-            tampilkanSoal(); // Refresh tampilan untuk menandai pilihan aktif
+            tampilkanSoal();
         }
 
         function ubahSoal(arah) {
@@ -116,7 +112,6 @@
             tampilkanSoal();
         }
 
-        // Timer 90 Menit Otomatis
         function mulaiTimer() {
             const timerInterval = setInterval(() => {
                 let m = Math.floor(timeLeft / 60);
@@ -172,7 +167,6 @@
                 });
                 let json = await res.json();
                 
-                // Hapus session setelah ujian selesai
                 sessionStorage.clear();
 
                 if(json.status === "success") {
@@ -196,12 +190,11 @@
                     `;
                 }
             } catch (err) {
-                alert("Terjadi kesalahan jaringan saat mengirim jawaban. Segera laporkan ke pengawas!");
+                alert("Terjadi kesalahan jaringan saat mengirim jawaban.");
                 window.location.reload();
             }
         }
 
-        // Mulai memuat soal saat halaman dibuka
         loadSoal();
     </script>
 </body>
