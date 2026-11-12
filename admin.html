@@ -1,88 +1,97 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Seleksi ASN Teladan</title>
+    <title>Admin Panel - Seleksi ASN Teladan Kemenag Kab. Pohuwato</title>
     <link rel="icon" type="image/png" href="logo-kemenag.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-100 min-h-screen p-4 md:p-8 flex items-center justify-center">
+<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-800">
 
     <!-- MODAL LOGIN ADMIN -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 border border-slate-100">
+    <div id="authModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-slate-100">
             <div class="text-center mb-6">
-                <div class="bg-blue-50 text-blue-600 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 font-bold text-xl">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-sm border border-emerald-100">
                     🔒
                 </div>
-                <h1 class="text-xl font-bold text-slate-800">Autentikasi Admin</h1>
-                <p class="text-sm text-slate-500 mt-1">Masukkan password untuk mengakses panel soal</p>
+                <h1 class="text-xl font-bold text-slate-900">Autentikasi Administrator</h1>
+                <p class="text-sm text-slate-500 mt-1">Masukkan password aman untuk mengelola bank soal</p>
             </div>
             <form onsubmit="verifikasiPassword(event)" class="space-y-4">
                 <div>
                     <input type="password" id="adminPassword" required placeholder="Password Admin" 
-                        class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 transition text-center tracking-widest font-mono">
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition text-center tracking-widest font-mono text-base">
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-md shadow-blue-600/20">
-                    Masuk Panel
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 rounded-xl transition shadow-lg shadow-emerald-700/20 text-sm">
+                    Masuk Panel Admin
                 </button>
             </form>
-            <div id="errorPassword" class="mt-3 text-red-500 text-xs text-center hidden">Password salah!</div>
+            <div id="errorPassword" class="mt-3 text-red-600 text-xs text-center font-medium hidden">Password salah!</div>
             <div class="mt-6 text-center border-t border-slate-100 pt-4">
-                <a href="index.html" class="text-xs text-slate-400 hover:text-slate-600 transition">&larr; Kembali ke Halaman Utama</a>
+                <a href="index.html" class="text-xs font-medium text-slate-400 hover:text-emerald-700 transition">&larr; Kembali ke Halaman Utama</a>
             </div>
         </div>
     </div>
 
     <!-- KONTEN UTAMA ADMIN (Disembunyikan sebelum login berhasil) -->
-    <div id="adminContent" class="max-w-5xl mx-auto w-full hidden">
-        <header class="bg-white p-6 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-slate-100">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Panel Admin: Kelola Bank Soal</h1>
-                <p class="text-sm text-slate-500">Manajemen soal pilihan ganda Seleksi ASN Teladan</p>
+    <div id="adminContent" class="max-w-5xl mx-auto w-full p-4 md:p-8 flex-grow hidden">
+        <header class="bg-white p-6 rounded-3xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-slate-200/80">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border border-emerald-100 overflow-hidden p-1">
+                    <img src="logo-kemenag.png" alt="Logo" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900">Panel Admin: Kelola Bank Soal</h1>
+                    <p class="text-xs text-slate-500">Manajemen soal pilihan ganda Seleksi ASN Teladan 2026</p>
+                </div>
             </div>
             <div class="flex items-center gap-3">
-                <div id="counterSoal" class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl font-bold text-sm border border-blue-100">
+                <div id="counterSoal" class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl font-bold text-xs border border-emerald-100">
                     Total Soal: 0
                 </div>
-                <button onclick="logoutAdmin()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl font-medium text-sm transition">
+                <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl font-semibold text-xs transition">
                     Keluar Admin
                 </button>
             </div>
         </header>
 
         <!-- Form Tambah Soal -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm mb-8 border border-slate-100">
-            <h2 class="text-lg font-semibold text-slate-800 mb-4">Tambah Soal Baru</h2>
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm mb-8 border border-slate-200/80">
+            <h2 class="text-base font-bold text-slate-900 mb-4">Tambah Soal Baru</h2>
             <form id="formSoal" onsubmit="tambahSoal(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Pertanyaan</label>
-                    <textarea id="pertanyaan" rows="3" required class="w-full border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tuliskan teks pertanyaan di sini..."></textarea>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Pertanyaan</label>
+                    <textarea id="pertanyaan" rows="3" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-emerald-600 focus:bg-white outline-none" placeholder="Tuliskan teks pertanyaan di sini..."></textarea>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Pilihan A</label>
-                        <input type="text" id="opsi_a" required class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Pilihan A</label>
+                        <input type="text" id="opsi_a" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Pilihan B</label>
-                        <input type="text" id="opsi_b" required class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Pilihan B</label>
+                        <input type="text" id="opsi_b" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Pilihan C</label>
-                        <input type="text" id="opsi_c" required class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Pilihan C</label>
+                        <input type="text" id="opsi_c" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Pilihan D</label>
-                        <input type="text" id="opsi_d" required class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Pilihan D</label>
+                        <input type="text" id="opsi_d" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Kunci Jawaban Benar</label>
-                    <select id="kunci" required class="w-full md:w-1/3 border border-slate-300 rounded-xl p-3 outline-none bg-white focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Kunci Jawaban Benar</label>
+                    <select id="kunci" required class="w-full md:w-1/3 bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white">
                         <option value="">Pilih Kunci Jawaban</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -91,15 +100,15 @@
                     </select>
                 </div>
 
-                <button type="submit" id="btnSimpan" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-xl transition shadow-md shadow-blue-600/20">
+                <button type="submit" id="btnSimpan" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3.5 rounded-xl transition shadow-lg shadow-emerald-700/20 text-sm">
                     Simpan Soal
                 </button>
             </form>
         </div>
 
         <!-- Daftar Soal -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="text-lg font-semibold text-slate-800 mb-4">Daftar Soal di Database</h2>
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200/80">
+            <h2 class="text-base font-bold text-slate-900 mb-4">Daftar Soal di Database</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -118,49 +127,56 @@
         </div>
     </div>
 
+    <!-- Footer Panel Admin -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400 font-medium">
+        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026 |ns
+    </footer>
+
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyZWzYcVquAJrUV8CKd-_Ly9uGvzR-7bX5gkjCinpzvgvUHDgkdxS2_86SxoJ-3lGxT1A/exec";
-        
-        
-        async function verifikasiPassword(e) {
-    e.preventDefault();
-    let inputPass = document.getElementById("adminPassword").value;
-    let errBox = document.getElementById("errorPassword");
-    let btnSubmit = e.target.querySelector("button");
 
-    btnSubmit.innerText = "Memeriksa...";
-    btnSubmit.disabled = true;
-    errBox.classList.add("hidden");
-
-    try {
-        let res = await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify({ action: "loginAdmin", password: inputPass })
-        });
-        let json = await res.json();
-
-        if (json.status === "success") {
-            sessionStorage.setItem("admin_logged_in", "true");
+        if (sessionStorage.getItem("admin_logged_in") === "true") {
             bukaPanelAdmin();
-        } else {
-            errBox.innerText = json.message;
-            errBox.classList.remove("hidden");
-            document.getElementById("adminPassword").value = "";
-            btnSubmit.innerText = "Masuk Panel";
-            btnSubmit.disabled = false;
         }
-    } catch (err) {
-        errBox.innerText = "Gagal terhubung ke server.";
-        errBox.classList.remove("hidden");
-        btnSubmit.innerText = "Masuk Panel";
-        btnSubmit.disabled = false;
-    }
-}
+
+        async function verifikasiPassword(e) {
+            e.preventDefault();
+            let inputPass = document.getElementById("adminPassword").value;
+            let errBox = document.getElementById("errorPassword");
+            let btnSubmit = e.target.querySelector("button");
+
+            btnSubmit.innerText = "Memeriksa...";
+            btnSubmit.disabled = true;
+            errBox.classList.add("hidden");
+
+            try {
+                let res = await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ action: "loginAdmin", password: inputPass })
+                });
+                let json = await res.json();
+
+                if (json.status === "success") {
+                    sessionStorage.setItem("admin_logged_in", "true");
+                    bukaPanelAdmin();
+                } else {
+                    errBox.innerText = json.message;
+                    errBox.classList.remove("hidden");
+                    document.getElementById("adminPassword").value = "";
+                    btnSubmit.innerText = "Masuk Panel Admin";
+                    btnSubmit.disabled = false;
+                }
+            } catch (err) {
+                errBox.innerText = "Gagal terhubung ke server.";
+                errBox.classList.remove("hidden");
+                btnSubmit.innerText = "Masuk Panel Admin";
+                btnSubmit.disabled = false;
+            }
+        }
 
         function bukaPanelAdmin() {
             document.getElementById("authModal").classList.add("hidden");
             document.getElementById("adminContent").classList.remove("hidden");
-            document.body.classList.remove("flex", "items-center", "justify-center");
             loadDaftarSoal();
         }
 
@@ -180,12 +196,12 @@
                     let html = "";
                     soalList.forEach((s, idx) => {
                         html += `
-                            <tr class="hover:bg-slate-50">
+                            <tr class="hover:bg-slate-50 transition">
                                 <td class="p-3 font-semibold">${idx + 1}</td>
                                 <td class="p-3 max-w-md truncate">${s.pertanyaan}</td>
-                                <td class="p-3 font-bold text-blue-600 uppercase">${s.kunci}</td>
+                                <td class="p-3 font-bold text-emerald-700 uppercase">${s.kunci}</td>
                                 <td class="p-3 text-center">
-                                    <button onclick="hapusSoal('${s.id}')" class="text-red-500 hover:text-red-700 font-medium text-xs bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-100 transition">Hapus</button>
+                                    <button onclick="hapusSoal('${s.id}')" class="text-red-600 hover:text-red-800 font-medium text-xs bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-100 transition">Hapus</button>
                                 </td>
                             </tr>
                         `;
