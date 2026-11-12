@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Seleksi ASN Teladan Kemenag Kab. Pohuwato</title>
+    <title>Admin Panel - Seleksi ASN Teladan Kementerian Agama Kab. Pohuwato</title>
     <link rel="icon" type="image/png" href="logo-kemenag.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <!-- KONTEN UTAMA ADMIN (Disembunyikan sebelum login berhasil) -->
+    <!-- KONTEN UTAMA ADMIN -->
     <div id="adminContent" class="max-w-5xl mx-auto w-full p-4 md:p-8 flex-grow hidden">
         <header class="bg-white p-6 rounded-3xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-slate-200/80">
             <div class="flex items-center space-x-3">
@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-slate-900">Panel Admin: Kelola Bank Soal</h1>
-                    <p class="text-xs text-slate-500">Manajemen soal pilihan ganda Seleksi ASN Teladan 2026</p>
+                    <p class="text-xs text-slate-500">Manajemen soal pilihan ganda Seleksi ASN Teladan</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -106,7 +106,7 @@
             </form>
         </div>
 
-        <!-- Daftar Soal -->
+        <!-- Daftar Soal dengan Navigasi Halaman (Pagination) -->
         <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200/80">
             <h2 class="text-base font-bold text-slate-900 mb-4">Daftar Soal di Database</h2>
             <div class="overflow-x-auto">
@@ -124,16 +124,30 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Kontrol Navigasi Halaman (Pagination Controls) -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 border-t border-slate-100 gap-4">
+                <div id="infoPaginasi" class="text-xs text-slate-500 font-medium">
+                    Menampilkan halaman 1 dari 1
+                </div>
+                <div class="flex items-center gap-2" id="tombolPaginasi">
+                    <!-- Tombol Halaman Diisi via JS -->
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Footer Panel Admin -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400 font-medium">
-        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026 |ns
+        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026
     </footer>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyZWzYcVquAJrUV8CKd-_Ly9uGvzR-7bX5gkjCinpzvgvUHDgkdxS2_86SxoJ-3lGxT1A/exec";
+        
+        let seluruhSoal = [];
+        let halamanAktif = 1;
+        let itemPerHalaman = 10; // Jumlah soal per halaman
 
         if (sessionStorage.getItem("admin_logged_in") === "true") {
             bukaPanelAdmin();
@@ -190,27 +204,78 @@
                 let res = await fetch(`${API_URL}?action=getSoalAdmin`);
                 let json = await res.json();
                 if(json.status === "success") {
-                    let soalList = json.data;
-                    document.getElementById("counterSoal").innerText = `Total Soal: ${soalList.length}`;
-                    
-                    let html = "";
-                    soalList.forEach((s, idx) => {
-                        html += `
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-3 font-semibold">${idx + 1}</td>
-                                <td class="p-3 max-w-md truncate">${s.pertanyaan}</td>
-                                <td class="p-3 font-bold text-emerald-700 uppercase">${s.kunci}</td>
-                                <td class="p-3 text-center">
-                                    <button onclick="hapusSoal('${s.id}')" class="text-red-600 hover:text-red-800 font-medium text-xs bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-100 transition">Hapus</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    document.getElementById("tabelSoal").innerHTML = html || `<tr><td colspan="4" class="p-4 text-center text-slate-400">Belum ada soal tersimpan.</td></tr>`;
+                    seluruhSoal = json.data;
+                    document.getElementById("counterSoal").innerText = `Total Soal: ${seluruhSoal.length}`;
+                    renderTabelSoal();
                 }
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function renderTabelSoal() {
+            let tbody = document.getElementById("tabelSoal");
+            if (seluruhSoal.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Belum ada soal tersimpan.</td></tr>`;
+                document.getElementById("infoPaginasi").innerText = "Tidak ada data";
+                document.getElementById("tombolPaginasi").innerHTML = "";
+                return;
+            }
+
+            let totalHalaman = Math.ceil(seluruhSoal.length / itemPerHalaman);
+            if (halamanAktif > totalHalaman) halamanAktif = totalHalaman;
+            if (halamanAktif < 1) halamanAktif = 1;
+
+            let mulai = (halamanAktif - 1) * itemPerHalaman;
+            let selesai = mulai + itemPerHalaman;
+            let soalHalamanIni = seluruhSoal.slice(mulai, selesai);
+
+            let html = "";
+            soalHalamanIni.forEach((s, idx) => {
+                let nomorUrut = mulai + idx + 1;
+                html += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 font-semibold">${nomorUrut}</td>
+                        <td class="p-3 max-w-md truncate">${s.pertanyaan}</td>
+                        <td class="p-3 font-bold text-emerald-700 uppercase">${s.kunci}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="hapusSoal('${s.id}')" class="text-red-600 hover:text-red-800 font-medium text-xs bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-100 transition">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            // Update Info Paginasi
+            document.getElementById("infoPaginasi").innerText = `Menampilkan ${mulai + 1} - ${Math.min(selesai, seluruhSoal.length)} dari ${seluruhSoal.length} soal (Halaman ${halamanAktif} dari ${totalHalaman})`;
+
+            // Render Tombol Navigasi Halaman
+            let paginasiHtml = `
+                <button onclick="ubahHalaman(${halamanAktif - 1})" ${halamanAktif === 1 ? 'disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"'}>
+                    &larr; Sebelumnya
+                </button>
+            `;
+
+            for (let i = 1; i <= totalHalaman; i++) {
+                if (i === halamanAktif) {
+                    paginasiHtml += `<button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-700 text-white shadow-xs">${i}</button>`;
+                } else {
+                    paginasiHtml += `<button onclick="ubahHalaman(${i})" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">${i}</button>`;
+                }
+            }
+
+            paginasiHtml += `
+                <button onclick="ubahHalaman(${halamanAktif + 1})" ${halamanAktif === totalHalaman ? 'disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-400 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"'}>
+                    Selanjutnya &rarr;
+                </button>
+            `;
+
+            document.getElementById("tombolPaginasi").innerHTML = paginasiHtml;
+        }
+
+        function ubahHalaman(halamanTujuan) {
+            halamanAktif = halamanTujuan;
+            renderTabelSoal();
         }
 
         async function tambahSoal(e) {
