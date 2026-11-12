@@ -3,78 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Seleksi - ASN Teladan Kementerian Agama Kab. Pohuwato</title>
+    <link rel="icon" type="image/png" href="logo-kemenag.png">
+    
     <!-- Open Graph Meta Tags untuk Preview Link Media Sosial -->
     <meta property="og:title" content="Seleksi ASN Teladan - Kementerian Agama Kab. Pohuwato">
     <meta property="og:description" content="Sistem Ujian Seleksi Berbasis CAT.">
     <meta property="og:image" content="https://oprkemenag-collab.github.io/Seleksi/logo-kemenag.png">
-    <meta property="og:image:width" content="200">
-    <meta property="og:image:height" content="200">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
     <meta property="og:url" content="https://oprkemenag-collab.github.io/Seleksi/">
     <meta property="og:type" content="website">
-    <title>Login Seleksi - ASN Teladan Kemenag</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="icon" type="image/png" href="logo-kemenag.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-full flex items-center justify-center p-4 bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950">
+<body class="h-full flex flex-col justify-between bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 selection:bg-emerald-500 selection:text-white">
 
-    <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 border border-white/20 transition-all duration-300">
-        <div class="text-center mb-8">
-            <!-- Logo Resmi Kementerian Agama -->
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-lg shadow-emerald-700/20 mb-4 transform hover:scale-105 transition overflow-hidden p-2 border border-emerald-100">
-                <img src="logo-kemenag.png" alt="Logo Kementerian Agama" class="w-full h-full object-contain">
-            </div>
-            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Seleksi ASN Teladan</h1>
-            <p class="text-sm text-slate-500 mt-1">Kementerian Agama &bull; Silakan masukkan data Anda</p>
-        </div>
-
-        <form id="formLogin" onsubmit="prosesLogin(event)" class="space-y-4">
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Nama Lengkap & Gelar</label>
-                <input type="text" id="nama" required placeholder="Contoh: Nama Saya, S.Kom" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+    <!-- Container Utama Login di Tengah -->
+    <div class="flex-grow flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 border border-white/20 transition-all duration-300 my-6">
+            <div class="text-center mb-8">
+                <!-- Logo Resmi Kementerian Agama -->
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white shadow-lg shadow-emerald-700/20 mb-4 transform hover:scale-105 transition overflow-hidden p-2 border border-emerald-100">
+                    <img src="logo-kemenag.png" alt="Logo Kementerian Agama" class="w-full h-full object-contain">
+                </div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Seleksi ASN Teladan 2026</h1>
+                <p class="text-sm text-slate-500 mt-1">Kementerian Agama Kab. Pohuwato &bull; Silakan masukkan data Anda</p>
             </div>
 
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">NIP (Nomor Induk Pegawai)</label>
-                <input type="text" id="nip" required placeholder="Contoh: 1234888820261001" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition font-mono">
+            <form id="formLogin" onsubmit="prosesLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Nama Lengkap & Gelar</label>
+                    <input type="text" id="nama" required placeholder="Contoh: Nama Saya, S.Kom" 
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">NIP (Nomor Induk Pegawai)</label>
+                    <input type="text" id="nip" required placeholder="Contoh: 1234888820261001" 
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Unit Kerja / Seksi</label>
+                    <select id="unit_kerja" required 
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
+                        <option value="" disabled selected>-- Pilih Unit Kerja / Seksi --</option>
+                        <option value="Seksi Subbag Tata Usaha">Seksi Subbag Tata Usaha</option>
+                        <option value="Seksi Bimas">Seksi Bimas</option>
+                        <option value="Seksi Pendidikan Madrasah">Seksi Pendidikan Madrasah</option>
+                        <option value="Seksi Zakat dan Wakaf">Seksi Zakat dan Wakaf</option>
+                        <option value="Seksi Pendidikan Agama dan Pendidikan Keagamaan Islam">Seksi Papkis</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Token Ujian</label>
+                    <input type="text" id="token" required placeholder="Masukkan token panitia" 
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition uppercase tracking-widest font-mono font-bold text-center">
+                </div>
+
+                <button type="submit" id="btnLogin" 
+                    class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-emerald-700/30 text-sm mt-2">
+                    Mulai Ujian Sekarang
+                </button>
+            </form>
+
+            <div id="pesanError" class="mt-4 p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl hidden text-center font-medium"></div>
+
+            <div class="mt-8 text-center border-t border-slate-100 pt-5">
+                <a href="admin.html" class="text-xs font-medium text-slate-400 hover:text-emerald-700 transition">Akses Panel Administrator &rarr;</a>
             </div>
-
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Unit Kerja / Seksi</label>
-                <select id="unit_kerja" required 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition">
-                    <option value="" disabled selected>-- Pilih Unit Kerja / Seksi --</option>
-                    <option value="Seksi Subbag Tata Usaha">Seksi Subbag Tata Usaha</option>
-                    <option value="Seksi Bimas">Seksi Bimas</option>
-                    <option value="Seksi Pendidikan Madrasah">Seksi Pendidikan Madrasah</option>
-                    <option value="Seksi Zakat dan Wakaf">Seksi Zakat dan Wakaf</option>
-                    <option value="Seksi Pendidikan Agama dan Pendidikan Keagamaan Islam">Seksi Papkis</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">Token Ujian</label>
-                <input type="text" id="token" required placeholder="Masukkan token panitia" 
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 text-sm outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition uppercase tracking-widest font-mono font-bold text-center">
-            </div>
-
-            <button type="submit" id="btnLogin" 
-                class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-semibold py-3.5 rounded-xl transition duration-200 shadow-lg shadow-emerald-700/30 text-sm mt-2">
-                Mulai Ujian Sekarang
-            </button>
-        </form>
-
-        <div id="pesanError" class="mt-4 p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl hidden text-center font-medium"></div>
-
-        <div class="mt-8 text-center border-t border-slate-100 pt-5">
-            <a href="admin.html" class="text-xs font-medium text-slate-400 hover:text-emerald-700 transition">Akses Panel Administrator &rarr;</a>
         </div>
     </div>
+
+    <!-- Footer Halaman Login -->
+    <footer class="w-full bg-slate-950/60 backdrop-blur-md border-t border-white/10 py-4 text-center text-xs text-slate-400 font-medium">
+        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026 |ns
+    </footer>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyZWzYcVquAJrUV8CKd-_Ly9uGvzR-7bX5gkjCinpzvgvUHDgkdxS2_86SxoJ-3lGxT1A/exec";
