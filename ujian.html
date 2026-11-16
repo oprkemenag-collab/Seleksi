@@ -15,15 +15,15 @@
 
     <!-- OVERLAY WAJIB FULLSCREEN ALA CAT -->
     <div id="fullscreenOverlay" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full p-8 text-center border border-white/20">
-            <div class="w-20 h-20 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-sm border border-emerald-100 p-2">
+        <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 text-center border border-white/20">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-sm border border-emerald-100 p-2">
                 <img src="logo-kemenag.png" alt="Logo" class="w-full h-full object-contain">
             </div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-2">Konfirmasi Memasuki Ruang Ujian</h2>
-            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">Konfirmasi Memasuki Ruang Ujian</h2>
+            <p class="text-slate-600 text-xs sm:text-sm mb-6 leading-relaxed">
                 Sistem Seleksi ASN Teladan Kementerian Agama Kab. Pohuwato berbasis CAT memerlukan mode <b>Layar Penuh (Fullscreen)</b>. Silakan klik tombol di bawah untuk memulai ujian secara resmi.
             </p>
-            <button onclick="mulaiUjianFull()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-4 rounded-xl transition text-base shadow-lg shadow-emerald-700/30">
+            <button onclick="mulaiUjianFull()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 sm:py-4 rounded-xl transition text-sm sm:text-base shadow-lg shadow-emerald-700/30">
                 Masuk Ruang Ujian & Full Screen
             </button>
         </div>
@@ -31,84 +31,87 @@
 
     <!-- Top Navigation Header -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-        <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-md shadow-emerald-700/20 text-sm overflow-hidden p-1 border border-emerald-100">
-                    <img src="logo-kemenag.png" alt="Logo Kemenag" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <h1 class="font-bold text-slate-900 text-base leading-tight">Seleksi ASN Teladan 2026</h1>
-                    <p class="text-xs text-slate-500 font-medium" id="namaPeserta">Memuat data peserta...</p>
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center shadow-md shadow-emerald-700/20 text-sm overflow-hidden p-1 border border-emerald-100 shrink-0">
+                        <img src="logo-kemenag.png" alt="Logo Kemenag" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">Seleksi ASN Teladan 2026</h1>
+                        <p class="text-[11px] sm:text-xs text-slate-500 font-medium truncate max-w-[220px] sm:max-w-none" id="namaPeserta">Memuat data peserta...</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                 <div class="text-right hidden sm:block">
                     <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Sisa Waktu Ujian</span>
                 </div>
-                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-xl font-mono font-bold text-xl tracking-wider shadow-inner flex items-center gap-2">
-                    <svg class="w-5 h-5 animate-pulse text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-red-50 border border-red-200 text-red-600 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-mono font-bold text-base sm:text-xl tracking-wider shadow-inner flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 animate-pulse text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span id="timer">90:00</span>
                 </div>
             </div>
         </div>
 
         <!-- TEKS BERJALAN (RUNNING TEXT) PENGUMUMAN UJIAN -->
-        <div class="bg-emerald-800 text-emerald-50 text-xs py-2 overflow-hidden whitespace-nowrap border-t border-emerald-700 flex items-center">
-            <div class="bg-emerald-900 text-emerald-200 font-bold px-3 py-1 uppercase tracking-wider text-[10px] ml-2 rounded shadow-inner shrink-0 z-10">
-                PENGUMUMAN
+        <div class="bg-emerald-800 text-emerald-50 text-xs py-1.5 sm:py-2 overflow-hidden whitespace-nowrap border-t border-emerald-700 flex items-center">
+            <div class="bg-emerald-900 text-emerald-200 font-bold px-2.5 py-0.5 uppercase tracking-wider text-[9px] sm:text-[10px] ml-2 rounded shadow-inner shrink-0 z-10">
+                INFO
             </div>
-            <marquee scrollamount="6" class="font-medium tracking-wide">
+            <marquee scrollamount="5" class="font-medium tracking-wide text-xs">
                 Selamat mengikuti Seleksi ASN Teladan Kementerian Agama Kab. Pohuwato 2026. Kerjakan soal dengan teliti dan jujur. Pastikan koneksi internet stabil hingga waktu ujian berakhir. Semoga sukses!
             </marquee>
         </div>
     </header>
 
     <!-- Main Exam Container -->
-    <main class="max-w-6xl w-full mx-auto p-4 sm:p-6 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6 items-start mt-2">
+    <main class="max-w-6xl w-full mx-auto p-3 sm:p-6 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 items-start mt-1">
         
         <!-- Kolom Soal Utama (3 Span) -->
-        <div class="lg:col-span-3 bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8 flex flex-col justify-between min-h-[480px]">
+        <div class="lg:col-span-3 bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-4 sm:p-8 flex flex-col justify-between min-h-[420px] sm:min-h-[480px]">
             <div id="soal-container">
-                <div class="flex flex-col items-center justify-center py-20 text-slate-400 space-y-3">
+                <div class="flex flex-col items-center justify-center py-16 text-slate-400 space-y-3">
                     <svg class="animate-spin h-8 w-8 text-emerald-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     <p class="text-sm font-medium">Memuat bank soal seleksi...</p>
                 </div>
             </div>
 
-            <!-- Tombol Navigasi Bawah -->
-            <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
-                <button id="btnPrev" onclick="ubahSoal(-1)" class="bg-slate-100 hover:bg-slate-200 active:scale-95 px-5 py-2.5 rounded-xl text-slate-700 font-semibold transition text-sm flex items-center gap-1.5">
+            <!-- Tombol Navigasi Bawah (Responsif HP) -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-100 gap-3">
+                <button id="btnPrev" onclick="ubahSoal(-1)" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 active:scale-95 px-4 py-2.5 rounded-xl text-slate-700 font-semibold transition text-xs sm:text-sm flex items-center justify-center gap-1.5 order-2 sm:order-1">
                     &larr; Sebelumnya
                 </button>
-                <div id="nomorIndikator" class="text-xs font-bold text-slate-400 tracking-wider">SOAL 1 DARI 100</div>
-                <button id="btnNext" onclick="ubahSoal(1)" class="bg-emerald-700 hover:bg-emerald-800 active:scale-95 px-6 py-2.5 rounded-xl text-white font-semibold transition text-sm shadow-md shadow-emerald-700/20 flex items-center gap-1.5">
+                <div id="nomorIndikator" class="text-[11px] sm:text-xs font-bold text-slate-400 tracking-wider order-1 sm:order-2 py-1">SOAL 1 DARI 100</div>
+                <button id="btnNext" onclick="ubahSoal(1)" class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 active:scale-95 px-5 py-2.5 rounded-xl text-white font-semibold transition text-xs sm:text-sm shadow-md shadow-emerald-700/20 flex items-center justify-center gap-1.5 order-3">
                     Selanjutnya &rarr;
                 </button>
-                <button id="btnSubmit" onclick="konfirmasiSubmit()" class="hidden bg-emerald-700 hover:bg-emerald-800 active:scale-95 px-6 py-2.5 rounded-xl text-white font-semibold transition text-sm shadow-md shadow-emerald-700/20">
+                <button id="btnSubmit" onclick="konfirmasiSubmit()" class="hidden w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 active:scale-95 px-6 py-2.5 rounded-xl text-white font-semibold transition text-xs sm:text-sm shadow-md shadow-emerald-700/20 order-3">
                     Selesai & Kirim Jawaban
                 </button>
             </div>
         </div>
 
-        <!-- Kolom Navigasi Nomor Soal (1 Span Sidebar Kanan) -->
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-5 flex flex-col sticky top-28">
+        <!-- Kolom Navigasi Nomor Soal (1 Span Sidebar Kanan - Di atas/bawah di HP) -->
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-4 sm:p-5 flex flex-col static lg:sticky top-28 order-first lg:order-last">
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 pb-2 border-b border-slate-100 flex justify-between items-center">
                 <span>Navigasi Soal</span>
                 <span id="counterTerjawab" class="text-emerald-700 font-semibold">0/100 Terjawab</span>
             </h3>
-            <div id="gridNavigasi" class="grid grid-cols-5 gap-2 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Di HP dibatasi max-h nya agar tidak terlalu panjang, bisa di-scroll -->
+            <div id="gridNavigasi" class="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-1.5 sm:gap-2 max-h-[160px] lg:max-h-[350px] overflow-y-auto pr-1">
                 <!-- Diisi otomatis via JS -->
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400 space-y-1.5">
+            <div class="mt-3 sm:mt-4 pt-3 border-t border-slate-100 text-[10px] sm:text-[11px] text-slate-400 space-y-1.5">
                 <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-md bg-emerald-700 inline-block"></span> Terjawab
+                    <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-emerald-700 inline-block"></span> Terjawab
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-md bg-amber-500 inline-block"></span> Belum Diisi / Terlewat
+                    <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-amber-500 inline-block"></span> Belum Diisi / Terlewat
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-md bg-slate-100 border border-slate-300 inline-block"></span> Belum Dikunjungi
+                    <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-md bg-slate-100 border border-slate-300 inline-block"></span> Belum Dikunjungi
                 </div>
             </div>
         </div>
@@ -116,8 +119,8 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400 font-medium">
-        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026 |ns
+    <footer class="bg-white border-t border-slate-200 py-3 sm:py-4 text-center text-[11px] sm:text-xs text-slate-400 font-medium">
+        Kementerian Agama Kabupaten Pohuwato &bull; Sistem Seleksi ASN Teladan &bull; 2026
     </footer>
 
     <script>
@@ -184,16 +187,16 @@
             document.getElementById("nomorIndikator").innerText = `SOAL ${currentIndex + 1} DARI ${soalData.length}`;
 
             let html = `
-                <div class="mb-4">
-                    <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">Pertanyaan No. ${currentIndex + 1}</span>
-                    <h2 class="text-base sm:text-lg font-semibold text-slate-900 leading-relaxed">${soal.pertanyaan}</h2>
+                <div class="mb-3 sm:mb-4">
+                    <span class="inline-block bg-emerald-50 text-emerald-700 text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2 sm:mb-3">Pertanyaan No. ${currentIndex + 1}</span>
+                    <h2 class="text-sm sm:text-lg font-semibold text-slate-900 leading-relaxed">${soal.pertanyaan}</h2>
                 </div>
-                <div class="space-y-3 mt-6">
+                <div class="space-y-2.5 sm:space-y-3 mt-4 sm:mt-6">
                     ${['A', 'B', 'C', 'D'].map(opt => `
-                        <label class="flex items-center p-4 border-2 rounded-2xl cursor-pointer transition-all duration-200 ${jawabanSiswa[soal.id] === opt ? 'border-emerald-700 bg-emerald-50/40 shadow-xs' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'}">
-                            <input type="radio" name="pilihan" value="${opt}" ${jawabanSiswa[soal.id] === opt ? 'checked' : ''} onchange="pilihJawaban('${soal.id}', '${opt}')" class="w-4 h-4 text-emerald-700 accent-emerald-700">
-                            <span class="ml-3 font-bold text-slate-700 w-6">${opt}.</span>
-                            <span class="text-slate-700 text-sm sm:text-base font-medium">${soal[opt.toLowerCase()]}</span>
+                        <label class="flex items-start sm:items-center p-3 sm:p-4 border-2 rounded-2xl cursor-pointer transition-all duration-200 ${jawabanSiswa[soal.id] === opt ? 'border-emerald-700 bg-emerald-50/40 shadow-xs' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'}">
+                            <input type="radio" name="pilihan" value="${opt}" ${jawabanSiswa[soal.id] === opt ? 'checked' : ''} onchange="pilihJawaban('${soal.id}', '${opt}')" class="w-4 h-4 text-emerald-700 accent-emerald-700 mt-0.5 sm:mt-0 shrink-0">
+                            <span class="ml-2.5 sm:ml-3 font-bold text-slate-700 w-5 sm:w-6 shrink-0">${opt}.</span>
+                            <span class="text-slate-700 text-xs sm:text-base font-medium leading-snug">${soal[opt.toLowerCase()]}</span>
                         </label>
                     `).join('')}
                 </div>
@@ -234,7 +237,7 @@
             let gridHtml = "";
             soalData.forEach((s, idx) => {
                 gridHtml += `
-                    <button id="nav-btn-${idx}" onclick="lompatKeSoal(${idx})" class="h-9 rounded-xl font-bold text-xs transition border flex items-center justify-center">
+                    <button id="nav-btn-${idx}" onclick="lompatKeSoal(${idx})" class="h-8 sm:h-9 rounded-xl font-bold text-xs transition border flex items-center justify-center">
                         ${idx + 1}
                     </button>
                 `;
@@ -252,7 +255,7 @@
                 let isDihampiri = soalDikunjungi[idx] === true;
                 let isActive = idx === currentIndex;
 
-                btn.className = "h-9 rounded-xl font-bold text-xs transition border flex items-center justify-center ";
+                btn.className = "h-8 sm:h-9 rounded-xl font-bold text-xs transition border flex items-center justify-center ";
 
                 if (isActive) {
                     btn.className += "border-emerald-700 ring-2 ring-emerald-700/30 bg-emerald-700 text-white shadow-xs";
@@ -294,7 +297,6 @@
             let tombolAksi = document.getElementById("tombolAksiModal");
 
             if (belumTerjawab > 0) {
-                // BLOKIR PENGIRIMAN JIKA MASIH ADA SOAL KOSONG
                 modalPesanEl.innerHTML = `
                     <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 mb-3 text-xs font-semibold">
                         ⚠️ Masih ada <b>${belumTerjawab} soal</b> yang belum diisi atau terlewat!
@@ -307,16 +309,15 @@
                     </button>
                 `;
             } else {
-                // IZINKAN KIRIM JIKA SEMUA SUDAH TERISI LENGKAP
                 modalPesanEl.innerHTML = `
                     Semua <b class="text-emerald-700">${soalData.length} soal</b> telah berhasil dijawab dengan lengkap.<br><br>
                     Yakin ingin menyelesaikan seleksi dan mengirim jawaban sekarang?
                 `;
                 tombolAksi.innerHTML = `
-                    <button onclick="tutupModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition text-sm">
+                    <button onclick="tutupModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition text-xs sm:text-sm">
                         Periksa Kembali
                     </button>
-                    <button onclick="eksekusiSubmit()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl transition text-sm shadow-md shadow-emerald-700/20">
+                    <button onclick="eksekusiSubmit()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl transition text-xs sm:text-sm shadow-md shadow-emerald-700/20">
                         Ya, Kirim Sekarang
                     </button>
                 `;
@@ -341,7 +342,6 @@
                 action: "submitUjian",
                 nip: nipAktif,
                 nama: namaAktif,
-                unit_kerja: unitAktif,
                 jawaban: jawabanSiswa
             };
 
