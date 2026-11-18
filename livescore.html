@@ -10,49 +10,41 @@
 </head>
 <body class="flex flex-col min-h-screen">
     
-    <!-- Header Live Score -->
-    <header class="bg-emerald-800 text-white p-6 shadow-md flex justify-between items-center sticky top-0 z-50">
-        <div>
-            <h1 class="text-2xl font-bold uppercase tracking-wider">Papan Peringkat Live</h1>
-            <p class="text-emerald-200 text-sm font-medium mt-1">Seleksi ASN Teladan - Kementerian Agama Kab. Pohuwato</p>
+    <!-- Header Live Score (Responsif) -->
+    <header class="bg-emerald-800 text-white p-4 sm:p-6 shadow-md flex justify-between items-center sticky top-0 z-50">
+        <div class="flex-grow">
+            <h1 class="text-lg sm:text-2xl font-bold uppercase tracking-wider leading-tight">Papan Peringkat Live</h1>
+            <p class="text-emerald-200 text-[10px] sm:text-sm font-medium mt-0.5 sm:mt-1 truncate max-w-[200px] sm:max-w-none">
+                Seleksi ASN Teladan - Kemenag Kab. Pohuwato
+            </p>
         </div>
-        <div class="text-right flex flex-col items-end">
-            <div class="flex items-center gap-2 mb-1">
-                <span class="relative flex h-3 w-3">
+        <div class="text-right flex flex-col items-end shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-2 mb-1">
+                <span class="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-red-500"></span>
                 </span>
-                <span class="font-bold text-sm uppercase tracking-widest text-emerald-100">Live Update</span>
+                <span class="font-bold text-[10px] sm:text-sm uppercase tracking-widest text-emerald-100">Live Update</span>
             </div>
-            <p class="text-xs text-emerald-300">Auto-refresh tiap 10 detik</p>
+            <p class="text-[9px] sm:text-xs text-emerald-300">Auto-refresh tiap 10 detik</p>
         </div>
     </header>
 
-    <!-- Konten Utama -->
-    <main class="flex-grow max-w-6xl w-full mx-auto p-4 sm:p-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse whitespace-nowrap">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase tracking-wider font-semibold">
-                            <th class="p-4 w-16 text-center">Rank</th>
-                            <th class="p-4">Nama Peserta</th>
-                            <th class="p-4">NIP</th>
-                            <th class="p-4">Unit Kerja</th>
-                            <th class="p-4 text-center">Sesi</th>
-                            <th class="p-4 text-center">Waktu Submit</th>
-                            <th class="p-4 text-right">Skor Akhir</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelPeringkat" class="divide-y divide-slate-100 text-sm">
-                        <tr><td colspan="7" class="p-8 text-center text-slate-400">Memuat data dari server...</td></tr>
-                    </tbody>
-                </table>
+    <!-- Konten Utama: Card Layout -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-3 sm:p-6">
+        
+        <!-- Wadah List Peringkat -->
+        <div id="tabelPeringkat" class="flex flex-col gap-3 sm:gap-4">
+            <!-- Loading State -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 flex flex-col items-center justify-center text-slate-400">
+                <svg class="animate-spin h-8 w-8 text-emerald-700 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <p class="text-sm font-medium">Memuat data dari server...</p>
             </div>
         </div>
+
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 text-center py-4 text-xs">
+    <footer class="bg-slate-900 text-slate-400 text-center py-4 text-[10px] sm:text-xs">
         &copy; 2026 Sistem Seleksi ASN Teladan Kementerian Agama
     </footer>
 
@@ -65,19 +57,22 @@
                 let json = await response.json();
                 
                 if (json.status === "success") {
-                    renderTabel(json.data);
+                    renderCards(json.data);
                 }
             } catch (error) {
                 console.error("Gagal menarik data:", error);
             }
         }
 
-        function renderTabel(data) {
-            let tbody = document.getElementById("tabelPeringkat");
+        function renderCards(data) {
+            let container = document.getElementById("tabelPeringkat");
             let html = "";
 
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">Belum ada peserta yang mengumpulkan ujian.</td></tr>`;
+                container.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center text-slate-400">
+                        Belum ada peserta yang mengumpulkan ujian.
+                    </div>`;
                 return;
             }
 
@@ -89,25 +84,52 @@
                 let dateObj = new Date(peserta.waktu);
                 let timeString = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
+                // Styling Medali untuk Juara 1, 2, 3
+                let rankStyle = "";
+                if (rank === 1) rankStyle = "bg-yellow-400 text-yellow-900 ring-4 ring-yellow-400/20 shadow-md";
+                else if (rank === 2) rankStyle = "bg-slate-300 text-slate-800 ring-4 ring-slate-300/20 shadow-md";
+                else if (rank === 3) rankStyle = "bg-orange-300 text-orange-900 ring-4 ring-orange-300/20 shadow-md";
+                else rankStyle = "bg-slate-100 text-slate-600 border border-slate-200";
+
+                // Background khusus top 3
+                let bgCard = rank === 1 ? 'bg-gradient-to-r from-yellow-50 to-white border-yellow-200' : 
+                             rank === 2 ? 'bg-gradient-to-r from-slate-50 to-white border-slate-200' : 
+                             rank === 3 ? 'bg-gradient-to-r from-orange-50 to-white border-orange-200' : 
+                             'bg-white border-slate-200 hover:shadow-md';
+
                 html += `
-                    <tr class="hover:bg-slate-50 transition-colors ${isTop3 ? 'bg-emerald-50/30' : ''}">
-                        <td class="p-4 text-center">
-                            ${rank === 1 ? '<span class="inline-flex w-8 h-8 rounded-full bg-yellow-400 text-yellow-900 font-bold items-center justify-center shadow">1</span>' :
-                              rank === 2 ? '<span class="inline-flex w-8 h-8 rounded-full bg-slate-300 text-slate-800 font-bold items-center justify-center shadow">2</span>' :
-                              rank === 3 ? '<span class="inline-flex w-8 h-8 rounded-full bg-orange-300 text-orange-900 font-bold items-center justify-center shadow">3</span>' :
-                              `<span class="font-semibold text-slate-500">${rank}</span>`}
-                        </td>
-                        <td class="p-4 font-semibold text-slate-800">${peserta.nama}</td>
-                        <td class="p-4 text-slate-500 font-mono text-xs">${peserta.nip}</td>
-                        <td class="p-4 text-slate-600">${peserta.unit}</td>
-                        <td class="p-4 text-center text-slate-600"><span class="bg-slate-100 px-2 py-1 rounded text-xs border border-slate-200">${peserta.sesi}</span></td>
-                        <td class="p-4 text-center text-slate-500">${timeString}</td>
-                        <td class="p-4 text-right font-black text-lg ${isTop3 ? 'text-emerald-700' : 'text-slate-700'}">${peserta.skor}</td>
-                    </tr>
+                    <div class="${bgCard} rounded-2xl shadow-sm border p-3 sm:p-4 flex items-center gap-3 sm:gap-4 transition-all duration-300">
+                        
+                        <!-- Lencana Peringkat -->
+                        <div class="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black text-sm sm:text-lg ${rankStyle}">
+                            ${rank}
+                        </div>
+                        
+                        <!-- Detail Peserta -->
+                        <div class="flex-grow min-w-0">
+                            <h3 class="font-bold text-slate-800 text-sm sm:text-base truncate leading-tight">${peserta.nama}</h3>
+                            <div class="text-[10px] sm:text-xs text-slate-500 mt-1 truncate">
+                                <span class="font-mono text-slate-400">${peserta.nip}</span> &bull; ${peserta.unit}
+                            </div>
+                            <div class="text-[9px] sm:text-[10px] text-slate-400 mt-1.5 flex gap-1.5 items-center flex-wrap">
+                                <span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-semibold border border-slate-200 shadow-sm">${peserta.sesi}</span>
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    ${timeString}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Skor Akhir -->
+                        <div class="shrink-0 text-right ml-2 border-l border-slate-100 pl-3 sm:pl-4">
+                            <div class="text-[9px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mb-0.5">Skor</div>
+                            <div class="font-black text-xl sm:text-3xl ${isTop3 ? 'text-emerald-700' : 'text-slate-700'} leading-none">${peserta.skor}</div>
+                        </div>
+                    </div>
                 `;
             });
 
-            tbody.innerHTML = html;
+            container.innerHTML = html;
         }
 
         // Panggil pertama kali saat halaman dimuat
