@@ -337,7 +337,6 @@ function eksekusiSubmit() {
 }
 
 async function submitUjian() {
-    // MENGIRIM DATA LENGKAP TERMASUK UNIT KERJA DAN SESI
     let payload = {
         action: "submitUjian",
         nip: nipAktif,
@@ -347,12 +346,13 @@ async function submitUjian() {
         jawaban: jawabanSiswa
     };
 
+    // Tampilkan animasi loading saat mengirim data ke server
     document.body.innerHTML = `
         <div class="flex flex-col h-screen items-center justify-center p-4 bg-emerald-950">
-            <div class="bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-white/20">
+            <div class="bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-white/20 transition-all duration-500">
                 <div class="animate-spin rounded-full h-12 w-12 border-4 border-emerald-700 border-t-transparent mx-auto mb-4"></div>
                 <h2 class="text-xl font-bold text-slate-900 mb-2">Mengirim Jawaban...</h2>
-                <p class="text-slate-500 text-sm">Mohon jangan menutup halaman ini hingga rekap nilai selesai diproses.</p>
+                <p class="text-slate-500 text-sm">Data sedang direkam ke server panitia.</p>
             </div>
         </div>
     `;
@@ -364,27 +364,55 @@ async function submitUjian() {
         });
         let json = await res.json();
         
+        // Hapus sesi login agar peserta tidak bisa kembali lewat tombol back
         sessionStorage.clear();
 
         if(json.status === "success") {
+            // Tampilkan Skor Akhir
             document.body.innerHTML = `
                 <div class="flex flex-col h-screen items-center justify-center p-4 bg-emerald-950">
-                    <div class="bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-white/20">
-                        <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-2xl shadow-lg shadow-emerald-700/20">✓</div>
+                    <div class="bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-white/20 transition-all duration-500 scale-100">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 font-bold text-3xl shadow-lg shadow-emerald-700/20 border border-emerald-200">
+                            ✓
+                        </div>
                         <h2 class="text-2xl font-bold text-slate-900 mb-1">Seleksi Selesai!</h2>
-                        <p class="text-slate-500 mb-6 text-sm">Jawaban Anda telah terekam secara resmi di sistem.</p>
-                        <div class="bg-slate-50 p-5 rounded-2xl mb-6 border border-slate-200/60">
+                        <p class="text-slate-500 mb-6 text-sm">Jawaban Anda telah terekam secara resmi.</p>
+                        
+                        <div class="bg-slate-50 p-5 rounded-2xl mb-6 border border-slate-200/60 shadow-inner">
                             <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Perolehan Skor Akhir</p>
                             <p class="text-5xl font-black text-emerald-700">${json.skor}</p>
                             <div class="flex justify-center gap-6 mt-4 text-xs font-semibold text-slate-600">
-                                <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg border border-emerald-200">Benar: ${json.benar}</span>
-                                <span class="bg-red-50 text-red-700 px-3 py-1 rounded-lg border border-red-200">Salah: ${json.salah}</span>
+                                <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg border border-emerald-200 shadow-sm">Benar: ${json.benar}</span>
+                                <span class="bg-red-50 text-red-700 px-3 py-1.5 rounded-lg border border-red-200 shadow-sm">Salah: ${json.salah}</span>
                             </div>
                         </div>
-                        <a href="index.html" class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl transition text-sm shadow-lg shadow-slate-900/20">Keluar / Selesai</a>
+                        
+                        <!-- Pesan Hitung Mundur -->
+                        <div class="bg-amber-50 text-amber-700 p-3 rounded-xl border border-amber-200 text-xs font-semibold mb-4 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <span>Layar tertutup otomatis dalam <span id="countdownUjian" class="text-amber-900 text-sm font-black mx-0.5">5</span> detik...</span>
+                        </div>
+                        
+                        <a href="index.html" class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl transition text-sm shadow-lg shadow-slate-900/20">
+                            Tutup Sekarang
+                        </a>
                     </div>
                 </div>
             `;
+
+            // Proses Hitung Mundur Otomatis Keluar
+            let waktuSisa = 5; // 5 Detik
+            let hitungMundur = setInterval(() => {
+                waktuSisa--;
+                let elemenAngka = document.getElementById("countdownUjian");
+                if (elemenAngka) elemenAngka.innerText = waktuSisa;
+                
+                // Jika waktu habis, paksa kembali ke index.html
+                if (waktuSisa <= 0) {
+                    clearInterval(hitungMundur);
+                    window.location.href = "index.html"; // Dialihkan ke halaman login
+                }
+            }, 1000); // interval 1000 milidetik (1 detik)
         }
     } catch (err) {
         alert("Terjadi kendala jaringan saat mengirim jawaban. Segera hubungi pengawas!");
