@@ -19,6 +19,24 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-up { animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* Animasi Shake Mengajak Memilih (Goyang Ringan Berkala) */
+        @keyframes inviteShake {
+            0%, 18%, 100% { transform: translateX(0) rotate(0deg); }
+            3%  { transform: translateX(-3.5px) rotate(-1deg); }
+            6%  { transform: translateX(3.5px) rotate(1deg); }
+            9%  { transform: translateX(-2.5px) rotate(-0.6deg); }
+            12% { transform: translateX(2.5px) rotate(0.6deg); }
+            15% { transform: translateX(-1px) rotate(0deg); }
+        }
+        .animate-invite-shake {
+            animation: inviteShake 4.5s ease-in-out infinite;
+            will-change: transform;
+        }
+        /* Berhenti sejenak saat kursor diarahkan ke kartu */
+        .animate-invite-shake:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="min-h-dvh flex flex-col bg-pattern pb-28">
@@ -169,13 +187,23 @@
                 return;
             }
 
-            container.innerHTML = list.map(k => {
+            const sudahPenuh = pilihanTerpilih.length >= 2;
+
+            container.innerHTML = list.map((k, index) => {
                 let terpilih = pilihanTerpilih.some(p => p.nip === k.nip);
+                // Hanya goyang jika belum dipilih dan kuota 2 pilihan belum penuh
+                let pakaiShake = !terpilih && !sudahPenuh;
+                // Jeda bergantian agar tidak goyang bersamaan semua
+                let delayDetik = ((index % 6) * 0.45).toFixed(2);
+
                 return `
                     <div onclick="togglePilih('${k.nip}')"
-                        class="cursor-pointer rounded-2xl p-4 border-2 transition-all duration-200 flex items-center justify-between gap-3 select-none ${
+                        style="${pakaiShake ? `animation-delay: ${delayDetik}s;` : ''}"
+                        class="cursor-pointer rounded-2xl p-4 border-2 transition-all duration-200 flex items-center justify-between gap-3 select-none active:scale-[0.98] ${
+                            pakaiShake ? 'animate-invite-shake' : ''
+                        } ${
                             terpilih
-                            ? 'bg-emerald-50/90 border-emerald-600 shadow-md'
+                            ? 'bg-emerald-50/90 border-emerald-600 shadow-md scale-[1.01]'
                             : 'bg-white border-slate-200/80 hover:border-emerald-300 shadow-sm'
                         }">
                         <div class="min-w-0">
