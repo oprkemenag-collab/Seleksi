@@ -121,6 +121,26 @@
         </div>
     </div>
 
+    <!-- Notifikasi Toast Modern -->
+    <div id="toastNotif" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] w-[92%] max-w-md pointer-events-none opacity-0 -translate-y-4 transition-all duration-300">
+        <div id="toastBox" class="bg-white/95 backdrop-blur-xl border border-amber-200 rounded-2xl shadow-2xl p-4 flex items-start gap-3.5 pointer-events-auto">
+            <div id="toastIcon" class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <div class="flex-grow min-w-0">
+                <h4 id="toastJudul" class="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">Perhatian</h4>
+                <p id="toastPesan" class="text-xs text-slate-600 mt-1 leading-relaxed font-medium"></p>
+            </div>
+            <button onclick="tutupNotif()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg transition shrink-0 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxF5D73PxlnoVRaNPBfwScK05d9ZFFCX1_SnnZi1mkjSH1SNDQNf6xpSe-gZLu7aSWi/exec";
 
@@ -181,7 +201,11 @@
                 pilihanTerpilih.splice(idx, 1);
             } else {
                 if (pilihanTerpilih.length >= 2) {
-                    alert("Maksimal hanya boleh memilih 2 kandidat. Batalkan salah satu pilihan terlebih dahulu jika ingin mengganti.");
+                    tampilkanNotif(
+                        "Batas Pilihan Tercapai",
+                        "Maksimal hanya boleh memilih 2 kandidat. Batalkan salah satu pilihan terlebih dahulu jika ingin mengganti.",
+                        "warning"
+                    );
                     return;
                 }
                 let kandidat = semuaKandidat.find(k => k.nip === nip);
@@ -208,7 +232,11 @@
             let nama = document.getElementById("namaPemilih").value.trim();
 
             if (!nip || !nama) {
-                alert("Silakan lengkapi NIP dan Nama Lengkap Anda di bagian atas terlebih dahulu.");
+                tampilkanNotif(
+                    "Identitas Belum Lengkap",
+                    "Silakan lengkapi NIP dan Nama Lengkap Anda di bagian atas terlebih dahulu.",
+                    "error"
+                );
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 return;
             }
@@ -227,6 +255,37 @@
 
         function tutupKonfirmasi() {
             document.getElementById("modalKonfirmasi").classList.add("hidden");
+        }
+
+        let timerNotif = null;
+
+        function tampilkanNotif(judul, pesan, tipe = "warning") {
+            const toast = document.getElementById("toastNotif");
+            const box = document.getElementById("toastBox");
+            const icon = document.getElementById("toastIcon");
+
+            document.getElementById("toastJudul").innerText = judul;
+            document.getElementById("toastPesan").innerText = pesan;
+
+            if (tipe === "error") {
+                box.className = "bg-white/95 backdrop-blur-xl border border-red-200 rounded-2xl shadow-2xl p-4 flex items-start gap-3.5 pointer-events-auto";
+                icon.className = "w-9 h-9 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0 mt-0.5";
+            } else {
+                box.className = "bg-white/95 backdrop-blur-xl border border-amber-200 rounded-2xl shadow-2xl p-4 flex items-start gap-3.5 pointer-events-auto";
+                icon.className = "w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5";
+            }
+
+            toast.classList.remove("opacity-0", "-translate-y-4", "pointer-events-none");
+            toast.classList.add("opacity-100", "translate-y-0");
+
+            clearTimeout(timerNotif);
+            timerNotif = setTimeout(tutupNotif, 3500);
+        }
+
+        function tutupNotif() {
+            const toast = document.getElementById("toastNotif");
+            toast.classList.add("opacity-0", "-translate-y-4", "pointer-events-none");
+            toast.classList.remove("opacity-100", "translate-y-0");
         }
 
         async function kirimVoting() {
