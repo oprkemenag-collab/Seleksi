@@ -79,8 +79,18 @@
         <!-- Ringkasan Statistik -->
         <section class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 animate-fade-up">
             <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm">
-                <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Pemilih</p>
-                <p id="totalPemilih" class="text-2xl sm:text-3xl font-black text-emerald-700 mt-0.5">0</p>
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Pemilih</p>
+                    <span id="persenPemilih" class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">0%</span>
+                </div>
+                <p class="text-2xl sm:text-3xl font-black text-emerald-700 mt-0.5">
+                    <span id="totalPemilih">0</span>
+                    <span class="text-sm sm:text-base font-bold text-slate-400">/ 53</span>
+                </p>
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-2">
+                    <div id="barPemilih" class="bg-emerald-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <p id="sisaPemilih" class="text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-1.5">Sisa 53 belum memilih</p>
             </div>
             <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm">
                 <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Suara Masuk</p>
@@ -150,13 +160,25 @@
             }
         }
 
-        function renderSemuaKandidat(data, totalPemilih) {
-            const container = document.getElementById("daftarKandidat");
-            const totalSuaraSemua = data.reduce((acc, item) => acc + (parseInt(item.suara) || 0), 0);
+        const TOTAL_PEMILIH_TARGET = 53;
 
-            document.getElementById("totalPemilih").innerText = totalPemilih;
-            document.getElementById("totalSuara").innerText = totalSuaraSemua;
-            document.getElementById("totalKandidat").innerText = `${data.length} Kandidat`;
+            function renderSemuaKandidat(data, totalPemilih) {
+                const container = document.getElementById("daftarKandidat");
+                const totalSuaraSemua = data.reduce((acc, item) => acc + (parseInt(item.suara) || 0), 0);
+            
+                // Hitung progres pemilih dari target 53 orang
+                const persenHadir = Math.min(100, (totalPemilih / TOTAL_PEMILIH_TARGET) * 100);
+                const sisa = Math.max(0, TOTAL_PEMILIH_TARGET - totalPemilih);
+            
+                document.getElementById("totalPemilih").innerText = totalPemilih;
+                document.getElementById("persenPemilih").innerText = `${persenHadir.toFixed(1)}%`;
+                document.getElementById("barPemilih").style.width = `${persenHadir}%`;
+                document.getElementById("sisaPemilih").innerText = sisa > 0
+                    ? `Sisa ${sisa} belum memilih`
+                    : `Semua pemilih telah berpartisipasi`;
+            
+                document.getElementById("totalSuara").innerText = totalSuaraSemua;
+                document.getElementById("totalKandidat").innerText = `${data.length} Kandidat`;
 
             if (data.length === 0) {
                 container.innerHTML = `
