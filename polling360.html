@@ -384,7 +384,45 @@
             }
         }
 
-        muatKandidat();
+        const BATAS_POLLING = new Date("2026-11-21T00:00:00+08:00").getTime();
+let timerPolling = null;
+
+function kunciHalamanPolling() {
+    clearInterval(timerPolling);
+    document.getElementById("bannerWaktu")?.classList.add("hidden");
+    document.getElementById("blokIdentitas")?.classList.add("hidden");
+    document.getElementById("blokKandidat")?.classList.add("hidden");
+    document.getElementById("bottomBar")?.classList.add("hidden");
+    document.getElementById("modalKonfirmasi")?.classList.add("hidden");
+
+    // Jangan timpa jika pemilih sudah berada di layar sukses
+    const suksesAktif = !document.getElementById("blokSukses").classList.contains("hidden");
+    if (!suksesAktif) {
+        document.getElementById("blokTutup").classList.remove("hidden");
+    }
+}
+
+function cekWaktuPolling() {
+    const sisaMs = BATAS_POLLING - Date.now();
+    if (sisaMs <= 0) {
+        kunciHalamanPolling();
+        return false;
+    }
+
+    const totalDetik = Math.floor(sisaMs / 1000);
+    const jam = String(Math.floor(totalDetik / 3600)).padStart(2, "0");
+    const menit = String(Math.floor((totalDetik % 3600) / 60)).padStart(2, "0");
+    const detik = String(totalDetik % 60).padStart(2, "0");
+
+    const el = document.getElementById("countdownPolling");
+    if (el) el.innerText = `${jam}:${menit}:${detik}`;
+    return true;
+}
+
+if (cekWaktuPolling()) {
+    muatKandidat();
+    timerPolling = setInterval(cekWaktuPolling, 1000);
+}
     </script>
 </body>
 </html>
