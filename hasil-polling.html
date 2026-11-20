@@ -21,17 +21,17 @@
         .animate-fade-up { animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
         @keyframes marqueeScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-.animate-marquee {
-    display: inline-flex;
-    white-space: nowrap;
-    animation: marqueeScroll 30s linear infinite;
-}
-.animate-marquee:hover {
-    animation-play-state: paused;
-}
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: marqueeScroll 30s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body class="min-h-dvh flex flex-col bg-pattern">
@@ -62,16 +62,16 @@
     </header>
 
     <!-- Teks Berjalan Daftar Pemilih -->
-<div class="bg-emerald-950 text-emerald-50 border-b border-emerald-800 py-2.5 overflow-hidden flex items-center shadow-sm">
-    <div class="bg-emerald-800 text-emerald-200 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 ml-3 mr-3 rounded-lg shrink-0 z-10 shadow">
-        Sudah Memilih
-    </div>
-    <div class="overflow-hidden flex-1 relative">
-        <div id="teksPemilih" class="animate-marquee text-xs sm:text-sm font-medium text-emerald-100">
-            <span>Memuat daftar pemilih...</span>
+    <div class="bg-emerald-950 text-emerald-50 border-b border-emerald-800 py-2.5 overflow-hidden flex items-center shadow-sm">
+        <div class="bg-emerald-800 text-emerald-200 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 ml-3 mr-3 rounded-lg shrink-0 z-10 shadow">
+            Sudah Memilih
+        </div>
+        <div class="overflow-hidden flex-1 relative">
+            <div id="teksPemilih" class="animate-marquee text-xs sm:text-sm font-medium text-emerald-100">
+                <span class="mx-4">Memuat daftar pemilih...</span>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- Konten Utama -->
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-5 sm:py-7">
@@ -114,34 +114,41 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxF5D73PxlnoVRaNPBfwScK05d9ZFFCX1_SnnZi1mkjSH1SNDQNf6xpSe-gZLu7aSWi/exec";
+        let lastPemilihKey = "";
 
         async function muatRekapan() {
-    try {
-        let response = await fetch(`${API_URL}?action=getLiveVoting`);
-        let json = await response.json();
+            try {
+                let response = await fetch(`${API_URL}?action=getLiveVoting`);
+                let json = await response.json();
 
-        if (json.status === "success") {
-            // 1. Update teks berjalan daftar pemilih
-            const elPemilih = document.getElementById("teksPemilih");
-            if (elPemilih) {
-                if (json.daftar_pemilih && json.daftar_pemilih.length > 0) {
-                    const teksGabung = json.daftar_pemilih
-                        .map(nama => `<span class="mx-4 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>${nama}</span>`)
-                        .join("");
-                    elPemilih.innerHTML = teksGabung + teksGabung;
-                    const durasi = Math.max(20, json.daftar_pemilih.length * 2.5);
-                    elPemilih.style.animationDuration = `${durasi}s`;
-                } else {
-                    elPemilih.innerHTML = `<span class="mx-4">Belum ada pemilih yang masuk.</span>`;
+                if (json.status === "success") {
+                    // 1. Update teks berjalan daftar pemilih (hanya jika ada pemilih baru agar animasi tidak lompat)
+                    const elPemilih = document.getElementById("teksPemilih");
+                    if (elPemilih) {
+                        const daftar = json.daftar_pemilih || [];
+                        const currentKey = daftar.join("|");
+                        if (currentKey !== lastPemilihKey) {
+                            lastPemilihKey = currentKey;
+                            if (daftar.length > 0) {
+                                const teksGabung = daftar
+                                    .map(nama => `<span class="mx-4 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>${nama}</span>`)
+                                    .join("");
+                                elPemilih.innerHTML = teksGabung + teksGabung;
+                                const durasi = Math.max(20, daftar.length * 2.5);
+                                elPemilih.style.animationDuration = `${durasi}s`;
+                            } else {
+                                elPemilih.innerHTML = `<span class="mx-4">Belum ada pemilih yang masuk.</span>`;
+                            }
+                        }
+                    }
+
+                    // 2. Update Total Pemilih, Total Suara, dan Daftar 10 Besar
+                    renderTop10(json.data || [], json.total_pemilih || 0);
                 }
+            } catch (err) {
+                console.error("Gagal memuat data:", err);
             }
-
-            // 2. Kode Anda yang sudah ada untuk update Total Pemilih, Total Suara, dan Daftar 10 Besar...
         }
-    } catch (err) {
-        console.error("Gagal memuat data:", err);
-    }
-}
 
         function renderTop10(data, totalPemilih) {
             const container = document.getElementById("daftarTop10");
