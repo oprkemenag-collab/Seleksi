@@ -116,17 +116,32 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbxF5D73PxlnoVRaNPBfwScK05d9ZFFCX1_SnnZi1mkjSH1SNDQNf6xpSe-gZLu7aSWi/exec";
 
         async function muatRekapan() {
-            try {
-                let res = await fetch(`${API_URL}?action=getLiveVoting`);
-                let json = await res.json();
+    try {
+        let response = await fetch(`${API_URL}?action=getLiveVoting`);
+        let json = await response.json();
 
-                if (json.status === "success") {
-                    renderTop10(json.data, json.total_pemilih || 0);
+        if (json.status === "success") {
+            // 1. Update teks berjalan daftar pemilih
+            const elPemilih = document.getElementById("teksPemilih");
+            if (elPemilih) {
+                if (json.daftar_pemilih && json.daftar_pemilih.length > 0) {
+                    const teksGabung = json.daftar_pemilih
+                        .map(nama => `<span class="mx-4 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>${nama}</span>`)
+                        .join("");
+                    elPemilih.innerHTML = teksGabung + teksGabung;
+                    const durasi = Math.max(20, json.daftar_pemilih.length * 2.5);
+                    elPemilih.style.animationDuration = `${durasi}s`;
+                } else {
+                    elPemilih.innerHTML = `<span class="mx-4">Belum ada pemilih yang masuk.</span>`;
                 }
-            } catch (err) {
-                console.error("Gagal memuat rekapan:", err);
             }
+
+            // 2. Kode Anda yang sudah ada untuk update Total Pemilih, Total Suara, dan Daftar 10 Besar...
         }
+    } catch (err) {
+        console.error("Gagal memuat data:", err);
+    }
+}
 
         function renderTop10(data, totalPemilih) {
             const container = document.getElementById("daftarTop10");
