@@ -54,6 +54,14 @@
         </div>
     </header>
 
+    <!-- Banner Batas Waktu -->
+    <div id="bannerWaktu" class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-center">
+        <p class="text-xs sm:text-sm font-bold text-amber-900">
+            Batas akhir polling: <span class="font-extrabold">Pukul 00:00 WITA</span> &bull;
+            Sisa waktu: <span id="countdownPolling" class="font-mono bg-amber-200/80 px-2 py-0.5 rounded-md text-amber-950">--:--:--</span>
+        </p>
+    </div>
+
     <!-- Konten Utama -->
     <main class="flex-grow max-w-3xl w-full mx-auto px-4 pt-5 sm:pt-7">
 
@@ -104,6 +112,18 @@
             <div id="ringkasanPilihan" class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 text-left text-xs sm:text-sm space-y-2 mb-6"></div>
             <a href="polling360.html" class="inline-block bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition">
                 Kembali ke Portal
+            </a>
+        </section>
+
+        <!-- Tampilan Polling Ditutup -->
+        <section id="blokTutup" class="hidden bg-white rounded-3xl shadow-xl border border-red-100 p-8 text-center animate-fade-up mt-4">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl font-black">!</div>
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Polling Telah Ditutup</h2>
+            <p class="text-sm text-slate-500 mb-6 leading-relaxed">
+                Batas waktu pemilihan ASN Teladan telah berakhir pada pukul <b>00:00 WITA</b>. Terima kasih atas partisipasi Anda.
+            </p>
+            <a href="hasil-polling.html" class="inline-block bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-md">
+                Lihat Rekapan Hasil Polling
             </a>
         </section>
 
