@@ -167,17 +167,18 @@
 
     <script>
         // Data Resmi 10 Besar Hasil Rekapan (CAT 40% + Polling ASN 30% + Daftar Hadir 30%)
+        // Data Resmi 10 Besar Hasil Rekapan Terbaru (CAT 40% + Polling ASN 30% + Daftar Hadir 30%)
         const dataPeserta = [
-            { rank: 1,  nama: "Rusliyanto A. Miungo, S.Kom", catNilai: "88,00", catKonv: "35,20", suara: 18, pollNilai: "17,31", pollKonv: "5,19", hadirNilai: "97,07", hadirKonv: "29,12", total: "69,51" },
-            { rank: 2,  nama: "Rifki Rahmat Sasambi, S.Kom", catNilai: "94,00", catKonv: "37,60", suara: 18, pollNilai: "17,31", pollKonv: "5,19", hadirNilai: "88,28", hadirKonv: "26,48", total: "69,28" },
-            { rank: 3,  nama: "Zenab Mbuinga, S.E",          catNilai: "89,00", catKonv: "35,60", suara: 9,  pollNilai: "8,65",  pollKonv: "2,60", hadirNilai: "92,39", hadirKonv: "27,72", total: "65,91" },
-            { rank: 4,  nama: "Muzna Monoarfa S.Pd",         catNilai: "92,00", catKonv: "36,80", suara: 7,  pollNilai: "6,73",  pollKonv: "2,02", hadirNilai: "90,16", hadirKonv: "27,05", total: "65,87" },
+            { rank: 1,  nama: "Rifki Rahmat Sasambi, S.Kom", catNilai: "94,00", catKonv: "37,60", suara: 18, pollNilai: "17,31", pollKonv: "5,19", hadirNilai: "91,48", hadirKonv: "27,44", total: "70,24" },
+            { rank: 2,  nama: "Rusliyanto A. Miungo, S.Kom", catNilai: "88,00", catKonv: "35,20", suara: 18, pollNilai: "17,31", pollKonv: "5,19", hadirNilai: "97,07", hadirKonv: "29,12", total: "69,51" },
+            { rank: 3,  nama: "Muzna Monoarfa S.Pd",         catNilai: "92,00", catKonv: "36,80", suara: 7,  pollNilai: "6,73",  pollKonv: "2,02", hadirNilai: "91,00", hadirKonv: "27,30", total: "66,12" },
+            { rank: 4,  nama: "Zenab Mbuinga, S.E",          catNilai: "89,00", catKonv: "35,60", suara: 9,  pollNilai: "8,65",  pollKonv: "2,60", hadirNilai: "92,39", hadirKonv: "27,72", total: "65,91" },
             { rank: 5,  nama: "Asrin Utina, S.Ag.",          catNilai: "86,00", catKonv: "34,40", suara: 7,  pollNilai: "6,73",  pollKonv: "2,02", hadirNilai: "97,99", hadirKonv: "29,40", total: "65,82" },
-            { rank: 6,  nama: "Aquitha Natalia Kukus, S.Th", catNilai: "90,00", catKonv: "36,00", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "96,33", hadirKonv: "28,90", total: "65,19" },
-            { rank: 7,  nama: "Roby Nusi, S.Kom",            catNilai: "88,00", catKonv: "35,20", suara: 2,  pollNilai: "1,92",  pollKonv: "0,58", hadirNilai: "96,40", hadirKonv: "28,92", total: "64,70" },
-            { rank: 8,  nama: "Tutan Loo, S.Kom",            catNilai: "92,00", catKonv: "36,80", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "91,47", hadirKonv: "27,44", total: "64,53" },
-            { rank: 9,  nama: "Rahmat Mopangga, S.Pd.",      catNilai: "89,00", catKonv: "35,60", suara: 8,  pollNilai: "7,69",  pollKonv: "2,31", hadirNilai: "87,91", hadirKonv: "26,37", total: "64,28" },
-            { rank: 10, nama: "I Ketut Dapet, S.Pd",         catNilai: "87,00", catKonv: "34,80", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "96,81", hadirKonv: "29,04", total: "64,13" }
+            { rank: 6,  nama: "Aquitha Natalia Kukus, S.Th", catNilai: "90,00", catKonv: "36,00", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "96,19", hadirKonv: "28,86", total: "65,14" },
+            { rank: 7,  nama: "Roby Nusi, S.Kom",            catNilai: "88,00", catKonv: "35,20", suara: 2,  pollNilai: "1,92",  pollKonv: "0,58", hadirNilai: "96,65", hadirKonv: "29,00", total: "64,77" },
+            { rank: 8,  nama: "Hijrah Mawadji",              catNilai: "92,00", catKonv: "36,80", suara: 2,  pollNilai: "1,92",  pollKonv: "0,58", hadirNilai: "90,83", hadirKonv: "27,25", total: "64,63" },
+            { rank: 9,  nama: "Tutan Loo, S.Kom",            catNilai: "92,00", catKonv: "36,80", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "91,47", hadirKonv: "27,44", total: "64,53" },
+            { rank: 10, nama: "I Ketut Dapet, S.Pd",         catNilai: "87,00", catKonv: "34,80", suara: 1,  pollNilai: "0,96",  pollKonv: "0,29", hadirNilai: "97,47", hadirKonv: "29,24", total: "64,33" }
         ];
 
         function badgeRank(rank) {
