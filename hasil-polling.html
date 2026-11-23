@@ -6,6 +6,7 @@
     <title>Rekapan Polling Kandidat - ASN Teladan</title>
     <link rel="icon" type="image/png" href="logo-kemenag.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -32,6 +33,13 @@
         .animate-marquee:hover {
             animation-play-state: paused;
         }
+
+        @media print {
+            body { background: #ffffff !important; }
+            .no-print { display: none !important; }
+            header { position: static !important; border-radius: 0 !important; box-shadow: none !important; }
+            #daftarKandidat > div { break-inside: avoid; box-shadow: none !important; border-color: #cbd5e1 !important; }
+        }
     </style>
 </head>
 <body class="min-h-dvh flex flex-col bg-pattern">
@@ -48,7 +56,7 @@
                     <p class="text-[11px] sm:text-sm text-emerald-200 font-medium mt-0.5 truncate">Kandidat Lulus Passing Grade &bull; Kemenag Kab. Pohuwato</p>
                 </div>
             </div>
-            <div class="text-right shrink-0 flex flex-col items-end">
+            <div class="text-right shrink-0 flex flex-col items-end no-print">
                 <div class="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 px-2.5 py-1 rounded-full">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -62,7 +70,7 @@
     </header>
 
     <!-- Teks Berjalan Daftar Pemilih -->
-    <div class="bg-emerald-950 text-emerald-50 border-b border-emerald-800 py-2.5 overflow-hidden flex items-center shadow-sm">
+    <div class="no-print bg-emerald-950 text-emerald-50 border-b border-emerald-800 py-2.5 overflow-hidden flex items-center shadow-sm">
         <div class="bg-emerald-800 text-emerald-200 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider px-3 py-1 ml-3 mr-3 rounded-lg shrink-0 z-10 shadow">
             Sudah Memilih
         </div>
@@ -101,11 +109,23 @@
                     <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Lulus Passing Grade</p>
                     <p id="totalKandidat" class="text-sm sm:text-base font-extrabold text-emerald-800">0 Kandidat</p>
                 </div>
-                <a href="pengumuman.html" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition shrink-0">
+                <a href="pengumuman.html" class="no-print bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition shrink-0">
                     Cek Kelulusan
                 </a>
             </div>
         </section>
+
+        <!-- Tombol Aksi Cetak & Excel -->
+        <div class="no-print flex flex-wrap items-center justify-end gap-2.5 mb-4">
+            <button onclick="window.print()"
+                class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
+                Cetak / Simpan PDF
+            </button>
+            <button onclick="exportKeExcel()"
+                class="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
+                Download Excel (.xlsx)
+            </button>
+        </div>
 
         <!-- Daftar Semua Kandidat Lulus Passing Grade -->
         <section id="daftarKandidat" class="flex flex-col gap-3">
@@ -124,7 +144,11 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxF5D73PxlnoVRaNPBfwScK05d9ZFFCX1_SnnZi1mkjSH1SNDQNf6xpSe-gZLu7aSWi/exec";
+        const TOTAL_PEMILIH_TARGET = 53;
+
         let lastPemilihKey = "";
+        let dataRekapTerakhir = [];
+        let daftarPemilihTerakhir = [];
 
         async function muatRekapan() {
             try {
@@ -132,19 +156,21 @@
                 let json = await response.json();
 
                 if (json.status === "success") {
+                    dataRekapTerakhir = json.data || [];
+                    daftarPemilihTerakhir = json.daftar_pemilih || [];
+
                     // 1. Update teks berjalan daftar pemilih (hanya jika ada pemilih baru agar animasi tidak lompat)
                     const elPemilih = document.getElementById("teksPemilih");
                     if (elPemilih) {
-                        const daftar = json.daftar_pemilih || [];
-                        const currentKey = daftar.join("|");
+                        const currentKey = daftarPemilihTerakhir.join("|");
                         if (currentKey !== lastPemilihKey) {
                             lastPemilihKey = currentKey;
-                            if (daftar.length > 0) {
-                                const teksGabung = daftar
+                            if (daftarPemilihTerakhir.length > 0) {
+                                const teksGabung = daftarPemilihTerakhir
                                     .map(nama => `<span class="mx-4 inline-flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>${nama}</span>`)
                                     .join("");
                                 elPemilih.innerHTML = teksGabung + teksGabung;
-                                const durasi = Math.max(20, daftar.length * 2.5);
+                                const durasi = Math.max(20, daftarPemilihTerakhir.length * 2.5);
                                 elPemilih.style.animationDuration = `${durasi}s`;
                             } else {
                                 elPemilih.innerHTML = `<span class="mx-4">Belum ada pemilih yang masuk.</span>`;
@@ -153,32 +179,30 @@
                     }
 
                     // 2. Render semua kandidat lulus passing grade
-                    renderSemuaKandidat(json.data || [], json.total_pemilih || 0);
+                    renderSemuaKandidat(dataRekapTerakhir, json.total_pemilih || 0);
                 }
             } catch (err) {
                 console.error("Gagal memuat data:", err);
             }
         }
 
-        const TOTAL_PEMILIH_TARGET = 53;
+        function renderSemuaKandidat(data, totalPemilih) {
+            const container = document.getElementById("daftarKandidat");
+            const totalSuaraSemua = data.reduce((acc, item) => acc + (parseInt(item.suara) || 0), 0);
 
-            function renderSemuaKandidat(data, totalPemilih) {
-                const container = document.getElementById("daftarKandidat");
-                const totalSuaraSemua = data.reduce((acc, item) => acc + (parseInt(item.suara) || 0), 0);
-            
-                // Hitung progres pemilih dari target 53 orang
-                const persenHadir = Math.min(100, (totalPemilih / TOTAL_PEMILIH_TARGET) * 100);
-                const sisa = Math.max(0, TOTAL_PEMILIH_TARGET - totalPemilih);
-            
-                document.getElementById("totalPemilih").innerText = totalPemilih;
-                document.getElementById("persenPemilih").innerText = `${persenHadir.toFixed(1)}%`;
-                document.getElementById("barPemilih").style.width = `${persenHadir}%`;
-                document.getElementById("sisaPemilih").innerText = sisa > 0
-                    ? `Sisa ${sisa} belum memilih`
-                    : `Semua pemilih telah berpartisipasi`;
-            
-                document.getElementById("totalSuara").innerText = totalSuaraSemua;
-                document.getElementById("totalKandidat").innerText = `${data.length} Kandidat`;
+            // Hitung progres pemilih dari target 53 orang
+            const persenHadir = Math.min(100, (totalPemilih / TOTAL_PEMILIH_TARGET) * 100);
+            const sisa = Math.max(0, TOTAL_PEMILIH_TARGET - totalPemilih);
+
+            document.getElementById("totalPemilih").innerText = totalPemilih;
+            document.getElementById("persenPemilih").innerText = `${persenHadir.toFixed(1)}%`;
+            document.getElementById("barPemilih").style.width = `${persenHadir}%`;
+            document.getElementById("sisaPemilih").innerText = sisa > 0
+                ? `Sisa ${sisa} belum memilih`
+                : `Semua pemilih telah berpartisipasi`;
+
+            document.getElementById("totalSuara").innerText = totalSuaraSemua;
+            document.getElementById("totalKandidat").innerText = `${data.length} Kandidat`;
 
             if (data.length === 0) {
                 container.innerHTML = `
@@ -227,9 +251,7 @@
 
                             <!-- Identitas Kandidat -->
                             <div class="flex-grow min-w-0">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h3 class="font-extrabold text-slate-900 text-sm sm:text-base truncate leading-tight">${k.nama}</h3>                                    
-                                </div>
+                                <h3 class="font-extrabold text-slate-900 text-sm sm:text-base truncate leading-tight">${k.nama}</h3>
                                 <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate">
                                     <span class="font-mono text-slate-400">${k.nip}</span> &bull; ${k.unit_kerja}
                                 </p>
@@ -252,6 +274,50 @@
                     </div>
                 `;
             }).join("");
+        }
+
+        function exportKeExcel() {
+            if (!dataRekapTerakhir.length) {
+                alert("Data belum selesai dimuat. Silakan tunggu sebentar.");
+                return;
+            }
+
+            const totalSuara = dataRekapTerakhir.reduce((acc, item) => acc + (parseInt(item.suara) || 0), 0);
+
+            // Sheet 1: Rekapan Perolehan Suara
+            const rowsRekap = dataRekapTerakhir.map((k, idx) => {
+                const suara = parseInt(k.suara) || 0;
+                const persen = totalSuara > 0 ? ((suara / totalSuara) * 100).toFixed(1) + "%" : "0.0%";
+                return {
+                    "Peringkat": idx + 1,
+                    "Nama Kandidat": k.nama,
+                    "NIP": "'" + (k.nip || ""),
+                    "Unit Kerja": k.unit_kerja || "-",
+                    "Jumlah Suara": suara,
+                    "Persentase": persen
+                };
+            });
+
+            // Sheet 2: Daftar Pemilih yang Sudah Berpartisipasi
+            const rowsPemilih = daftarPemilihTerakhir.map((nama, idx) => ({
+                "No": idx + 1,
+                "Nama Pemilih": nama
+            }));
+
+            const wb = XLSX.utils.book_new();
+
+            const wsRekap = XLSX.utils.json_to_sheet(rowsRekap);
+            wsRekap["!cols"] = [
+                { wch: 10 }, { wch: 32 }, { wch: 22 }, { wch: 30 }, { wch: 14 }, { wch: 12 }
+            ];
+            XLSX.utils.book_append_sheet(wb, wsRekap, "Rekapan Suara");
+
+            const wsPemilih = XLSX.utils.json_to_sheet(rowsPemilih);
+            wsPemilih["!cols"] = [{ wch: 6 }, { wch: 35 }];
+            XLSX.utils.book_append_sheet(wb, wsPemilih, "Daftar Pemilih");
+
+            const tgl = new Date().toISOString().slice(0, 10);
+            XLSX.writeFile(wb, `Rekapan_Polling_ASN_Teladan_${tgl}.xlsx`);
         }
 
         muatRekapan();
