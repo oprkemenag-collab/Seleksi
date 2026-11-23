@@ -182,10 +182,7 @@
         ];
 
         function badgeRank(rank) {
-            if (rank === 1) return `<span class="w-9 h-9 rounded-xl bg-amber-400 text-amber-950 font-black text-sm inline-flex items-center justify-center shadow-sm">1</span>`;
-            if (rank === 2) return `<span class="w-9 h-9 rounded-xl bg-slate-300 text-slate-800 font-black text-sm inline-flex items-center justify-center shadow-sm">2</span>`;
-            if (rank === 3) return `<span class="w-9 h-9 rounded-xl bg-orange-300 text-orange-950 font-black text-sm inline-flex items-center justify-center shadow-sm">3</span>`;
-            return `<span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-extrabold text-sm inline-flex items-center justify-center">${rank}</span>`;
+            return `<span class="font-extrabold text-slate-700 text-sm">${rank}</span>`;
         }
 
         function renderData(list) {
